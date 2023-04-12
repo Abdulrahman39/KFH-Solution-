@@ -323,8 +323,12 @@ const Crud = () => {
                 <Divider layout='vertical' />
 
                 <div className="col">
-                    <Toolbar className="mb-4  border-0" left={<h2>Projects</h2>} right={leftToolbarTemplate}></Toolbar>
-                    <p>Create, edit and manage Projects and who has access to each project.</p>
+                    <div className='flex justify-content-between'>
+                        <h2>Projects</h2>
+                        <div className=' flex '>{leftToolbarTemplate()}</div>
+                    </div>
+                    {/* <Toolbar className="mb-4  border-0"  right={leftToolbarTemplate}></Toolbar> */}
+                    <p className='text-lg'>Create, edit and manage Projects and who has access to each project.</p>
                     <div className="card">
 
                         <Toast ref={toast} />
