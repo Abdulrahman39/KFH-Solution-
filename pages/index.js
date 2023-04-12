@@ -1,321 +1,78 @@
+import { useRouter } from 'next/router';
+import React, { useContext, useState } from 'react';
+import AppConfig from '../layout/AppConfig';
+import { Checkbox } from 'primereact/checkbox';
 import { Button } from 'primereact/button';
-import { Chart } from 'primereact/chart';
-import { Column } from 'primereact/column';
-import { DataTable } from 'primereact/datatable';
-import { Menu } from 'primereact/menu';
-import React, { useContext, useEffect, useRef, useState } from 'react';
-import { ProductService } from '../demo/service/ProductService';
+import { Password } from 'primereact/password';
 import { LayoutContext } from '../layout/context/layoutcontext';
-import Link from 'next/link';
-const lineData = {
-    labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-    datasets: [
-        {
-            label: 'First Dataset',
-            data: [65, 59, 80, 81, 56, 55, 40],
-            fill: false,
-            backgroundColor: '#2f4860',
-            borderColor: '#2f4860',
-            tension: 0.4
-        },
-        {
-            label: 'Second Dataset',
-            data: [28, 48, 40, 19, 86, 27, 90],
-            fill: false,
-            backgroundColor: '#00bb7e',
-            borderColor: '#00bb7e',
-            tension: 0.4
-        }
-    ]
-};
+import { InputText } from 'primereact/inputtext';
+import { classNames } from 'primereact/utils';
+import newAuthStore from "../stores/authStore";
 
-const Dashboard = () => {
-    const [products, setProducts] = useState(null);
-    const menu1 = useRef(null);
-    const menu2 = useRef(null);
-    const [lineOptions, setLineOptions] = useState(null);
+const LoginPage = () => {
+    const [password, setPassword] = useState('');
+    const [email, setEmail] = useState('');
+    const [checked, setChecked] = useState(false);
     const { layoutConfig } = useContext(LayoutContext);
 
-    const applyLightTheme = () => {
-        const lineOptions = {
-            plugins: {
-                legend: {
-                    labels: {
-                        color: '#495057'
-                    }
-                }
-            },
-            scales: {
-                x: {
-                    ticks: {
-                        color: '#495057'
-                    },
-                    grid: {
-                        color: '#ebedef'
-                    }
-                },
-                y: {
-                    ticks: {
-                        color: '#495057'
-                    },
-                    grid: {
-                        color: '#ebedef'
-                    }
-                }
-            }
-        };
+    const router = useRouter();
+    const containerClassName = classNames('surface-ground flex align-items-center justify-content-center min-h-screen min-w-screen overflow-hidden', { 'p-input-filled': layoutConfig.inputStyle === 'filled' });
 
-        setLineOptions(lineOptions);
-    };
+    const handleClick = async () => {
+        console.log({email, password});
+        const res = await newAuthStore.login({email, password});
 
-    const applyDarkTheme = () => {
-        const lineOptions = {
-            plugins: {
-                legend: {
-                    labels: {
-                        color: '#ebedef'
-                    }
-                }
-            },
-            scales: {
-                x: {
-                    ticks: {
-                        color: '#ebedef'
-                    },
-                    grid: {
-                        color: 'rgba(160, 167, 181, .3)'
-                    }
-                },
-                y: {
-                    ticks: {
-                        color: '#ebedef'
-                    },
-                    grid: {
-                        color: 'rgba(160, 167, 181, .3)'
-                    }
-                }
-            }
-        };
-
-        setLineOptions(lineOptions);
-    };
-
-    useEffect(() => {
-        ProductService.getProductsSmall().then((data) => setProducts(data));
-    }, []);
-
-    useEffect(() => {
-        if (layoutConfig.colorScheme === 'light') {
-            applyLightTheme();
-        } else {
-            applyDarkTheme();
-        }
-    }, [layoutConfig.colorScheme]);
-
-    const formatCurrency = (value) => {
-        return value.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+        if (res !== "")
+            await router.push('/projects');
     };
 
     return (
-        <div className="grid">
-            <div className="col-12 lg:col-6 xl:col-3">
-                <div className="card mb-0 shadow-1">
-                    <div className="flex justify-content-between">
+        <div className={containerClassName}>
+            <div className="flex flex-column align-items-center justify-content-center">
+                <img src={`/layout/images/KFHLOGO.png`} alt="Sakai logo" className="mb-5 w-6rem flex-shrink-0" style={{borderRadius: '20px'}} />
+                <div style={{ borderRadius: '56px', padding: '0.3rem', background: 'linear-gradient(180deg, var(--primary-color) 10%, rgba(33, 150, 243, 0) 30%)' }}>
+                    <div className="w-full surface-card py-8 px-5 sm:px-8" style={{ borderRadius: '53px' }}>
+                        <div className="text-center mb-5">
+                            <img src="/demo/images/login/avatar.png" alt="Image" height="50" className="mb-3" />
+                            <div className="text-900 text-3xl font-medium mb-3">Welcome!</div>
+                            <span className="text-600 font-medium">Sign in to continue</span>
+                        </div>
+
                         <div>
-                            <span className="block text-500 font-medium text-xl">Project Name</span>
+                            <label htmlFor="email1" className="block text-900 text-xl font-medium mb-2">
+                                Email
+                            </label>
+                            <InputText inputid="email1" value={email} onChange={(e) => setEmail(e.target.value)} type="text" placeholder="Email address" className="w-full md:w-30rem mb-5" style={{ padding: '1rem' }} />
 
-                            <div className="flex justify-content-between mb-2 mt-4">
-                                <div style={{marginRight: "50px"}}>
-                                    <div className="flex align-items-center justify-content-center bg-gray-300 border-round" style={{ width: '2.5rem', height: '2.5rem' }}>
-                                        <i className="pi pi-apple text-black-500 text-xl" />
-                                    </div>
-                                    <div className="text-900 font-medium mb-3 text-xl text-center">152</div>
-                                </div>
+                            <label htmlFor="password1" className="block text-900 font-medium text-xl mb-2">
+                                Password
+                            </label>
+                            <Password inputid="password1" value={password} onChange={(e) => setPassword(e.target.value)} feedback={false} placeholder="Password" toggleMask className="w-full mb-5" inputClassName="w-full p-3 md:w-30rem"></Password>
 
-                                <div>
-                                    <div className="flex align-items-center justify-content-center bg-green-100 border-round" style={{ width: '2.5rem', height: '2.5rem' }}>
-                                        <i className="pi pi-android text-green-500 text-xl" />
-                                    </div>
-                                    <div className="text-900 font-medium mb-3 text-xl text-center">152</div>
+                            <div className="flex align-items-center justify-content-between mb-5 gap-5">
+                                <div className="flex align-items-center">
+                                    <Checkbox inputid="rememberme1" checked={checked} onChange={(e) => setChecked(e.checked)} className="mr-2"></Checkbox>
+                                    <label htmlFor="rememberme1">Remember me</label>
                                 </div>
+                                <a className="font-medium no-underline ml-2 text-right cursor-pointer" style={{ color: 'var(--primary-color)' }}>
+                                    Forgot password?
+                                </a>
                             </div>
+                            <Button label="Sign In" className="w-full p-3 text-xl" onClick={handleClick}></Button>
                         </div>
                     </div>
-
-                    <span className="text-yellow-500 font-medium">Created on </span>
-                    <span className="text-500">00/00/0000</span>
-                </div>
-            </div>
-            <div className="col-12 lg:col-6 xl:col-3">
-                <div className="card mb-0 shadow-1">
-                    <div className="flex justify-content-between">
-                        <div>
-                            <span className="block text-500 font-medium text-xl">Project Name</span>
-
-                            <div className="flex justify-content-between mb-2 mt-4">
-                                <div style={{marginRight: "50px"}}>
-                                    <div className="flex align-items-center justify-content-center bg-gray-300 border-round" style={{ width: '2.5rem', height: '2.5rem' }}>
-                                        <i className="pi pi-apple text-black-500 text-xl" />
-                                    </div>
-                                    <div className="text-900 font-medium mb-3 text-xl text-center">152</div>
-                                </div>
-
-                                <div>
-                                    <div className="flex align-items-center justify-content-center bg-green-100 border-round" style={{ width: '2.5rem', height: '2.5rem' }}>
-                                        <i className="pi pi-android text-green-500 text-xl" />
-                                    </div>
-                                    <div className="text-900 font-medium mb-3 text-xl text-center">152</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <span className="text-yellow-500 font-medium">Created on </span>
-                    <span className="text-500">00/00/0000</span>
-                </div>
-            </div>
-            <div className="col-12 lg:col-6 xl:col-3">
-                <div className="card mb-0 shadow-1">
-                    <div className="flex justify-content-between">
-                        <div>
-                            <span className="block text-500 font-medium text-xl">Project Name</span>
-
-                            <div className="flex justify-content-between mb-2 mt-4">
-                                <div style={{marginRight: "50px"}}>
-                                    <div className="flex align-items-center justify-content-center bg-gray-300 border-round" style={{ width: '2.5rem', height: '2.5rem' }}>
-                                        <i className="pi pi-apple text-black-500 text-xl" />
-                                    </div>
-                                    <div className="text-900 font-medium mb-3 text-xl text-center">152</div>
-                                </div>
-
-                                <div>
-                                    <div className="flex align-items-center justify-content-center bg-green-100 border-round" style={{ width: '2.5rem', height: '2.5rem' }}>
-                                        <i className="pi pi-android text-green-500 text-xl" />
-                                    </div>
-                                    <div className="text-900 font-medium mb-3 text-xl text-center">152</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <span className="text-yellow-500 font-medium">Created on </span>
-                    <span className="text-500">00/00/0000</span>
-                </div>
-            </div>
-            <div className="col-12 lg:col-6 xl:col-3">
-                <div className="card mb-0 shadow-1">
-                    <div className="flex justify-content-between">
-                        <div>
-                            <span className="block text-500 font-medium text-xl">Project Name</span>
-
-                            <div className="flex justify-content-between mb-2 mt-4">
-                                <div style={{marginRight: "50px"}}>
-                                    <div className="flex align-items-center justify-content-center bg-gray-300 border-round" style={{ width: '2.5rem', height: '2.5rem' }}>
-                                        <i className="pi pi-apple text-black-500 text-xl" />
-                                    </div>
-                                    <div className="text-900 font-medium mb-3 text-xl text-center">152</div>
-                                </div>
-
-                                <div>
-                                    <div className="flex align-items-center justify-content-center bg-green-100 border-round" style={{ width: '2.5rem', height: '2.5rem' }}>
-                                        <i className="pi pi-android text-green-500 text-xl" />
-                                    </div>
-                                    <div className="text-900 font-medium mb-3 text-xl text-center">152</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <span className="text-yellow-500 font-medium">Created on </span>
-                    <span className="text-500">00/00/0000</span>
-                </div>
-            </div>
-            <div className="col-12 lg:col-6 xl:col-3">
-                <div className="card mb-0 shadow-1">
-                    <div className="flex justify-content-between">
-                        <div>
-                            <span className="block text-500 font-medium text-xl">Project Name</span>
-
-                            <div className="flex justify-content-between mb-2 mt-4">
-                                <div style={{marginRight: "50px"}}>
-                                    <div className="flex align-items-center justify-content-center bg-gray-300 border-round" style={{ width: '2.5rem', height: '2.5rem' }}>
-                                        <i className="pi pi-apple text-black-500 text-xl" />
-                                    </div>
-                                    <div className="text-900 font-medium mb-3 text-xl text-center">152</div>
-                                </div>
-
-                                <div>
-                                    <div className="flex align-items-center justify-content-center bg-green-100 border-round" style={{ width: '2.5rem', height: '2.5rem' }}>
-                                        <i className="pi pi-android text-green-500 text-xl" />
-                                    </div>
-                                    <div className="text-900 font-medium mb-3 text-xl text-center">152</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <span className="text-yellow-500 font-medium">Created on </span>
-                    <span className="text-500">00/00/0000</span>
-                </div>
-            </div>
-            <div className="col-12 lg:col-6 xl:col-3">
-                <div className="card mb-0 shadow-1">
-                    <div className="flex justify-content-between">
-                        <div>
-                            <span className="block text-500 font-medium text-xl">Project Name</span>
-
-                            <div className="flex justify-content-between mb-2 mt-4">
-                                <div style={{marginRight: "50px"}}>
-                                    <div className="flex align-items-center justify-content-center bg-gray-300 border-round" style={{ width: '2.5rem', height: '2.5rem' }}>
-                                        <i className="pi pi-apple text-black-500 text-xl" />
-                                    </div>
-                                    <div className="text-900 font-medium mb-3 text-xl text-center">152</div>
-                                </div>
-
-                                <div>
-                                    <div className="flex align-items-center justify-content-center bg-green-100 border-round" style={{ width: '2.5rem', height: '2.5rem' }}>
-                                        <i className="pi pi-android text-green-500 text-xl" />
-                                    </div>
-                                    <div className="text-900 font-medium mb-3 text-xl text-center">152</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <span className="text-yellow-500 font-medium">Created on </span>
-                    <span className="text-500">00/00/0000</span>
-                </div>
-            </div>
-            <div className="col-12 lg:col-6 xl:col-3">
-                <div className="card mb-0 shadow-1">
-                    <div className="flex justify-content-between">
-                        <div>
-                            <span className="block text-500 font-medium text-xl">Project Name</span>
-
-                            <div className="flex justify-content-between mb-2 mt-4">
-                                <div style={{marginRight: "50px"}}>
-                                    <div className="flex align-items-center justify-content-center bg-gray-300 border-round" style={{ width: '2.5rem', height: '2.5rem' }}>
-                                        <i className="pi pi-apple text-black-500 text-xl" />
-                                    </div>
-                                    <div className="text-900 font-medium mb-3 text-xl text-center">152</div>
-                                </div>
-
-                                <div>
-                                    <div className="flex align-items-center justify-content-center bg-green-100 border-round" style={{ width: '2.5rem', height: '2.5rem' }}>
-                                        <i className="pi pi-android text-green-500 text-xl" />
-                                    </div>
-                                    <div className="text-900 font-medium mb-3 text-xl text-center">152</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <span className="text-yellow-500 font-medium">Created on </span>
-                    <span className="text-500">00/00/0000</span>
                 </div>
             </div>
         </div>
     );
 };
 
-export default Dashboard;
+LoginPage.getLayout = function getLayout(page) {
+    return (
+        <React.Fragment>
+            {page}
+            <AppConfig simple />
+        </React.Fragment>
+    );
+};
+export default LoginPage;
