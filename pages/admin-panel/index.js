@@ -308,7 +308,7 @@ const Crud = () => {
 
             <div className="grid gap-3 mt-5 ">
 
-                <div className='col-3 '>
+                <div className='col-2 '>
                     <p className='text-center text-xl'>Administration panel</p>
 
                     <div className='col-12 flex justify-content-center align-content-center text-center w-full'>
@@ -322,7 +322,7 @@ const Crud = () => {
                 </div>
                 <Divider layout='vertical' />
 
-                <div className="col-8">
+                <div className="col">
                     <Toolbar className="mb-4  border-0" left={<h2>Projects</h2>} right={leftToolbarTemplate}></Toolbar>
                     <p>Create, edit and manage Projects and who has access to each project.</p>
                     <div className="card">
