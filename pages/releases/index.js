@@ -17,6 +17,7 @@ import { CustomerService } from '../../demo/service/CustomerService';
 import { ProductService } from '../../demo/service/ProductService';
 
 import { InputText } from 'primereact/inputtext';
+import {useRouter} from "next/router";
 
 const TableDemo = () => {
     const [customers1, setCustomers1] = useState(null);
@@ -231,8 +232,21 @@ const TableDemo = () => {
         );
     };
 
+    const handleDownload = () => {
+        console.log(navigator.userAgent);
+
+        if (navigator.userAgent.indexOf("Mac") !== -1)
+            alert("OS: macOS");
+        else if (navigator.userAgent.indexOf("Windows") !== -1)
+            alert("OS: Windows");
+        else if (navigator.userAgent.indexOf("iPhone") !== -1 || navigator.userAgent.indexOf("iPad") !== -1 || navigator.userAgent.indexOf("iPod") !== -1)
+            alert("OS: iOS");
+        else if (navigator.userAgent.indexOf("Android") !== -1)
+            alert("OS: Android");
+    };
+
     const verifiedBodyTemplate = (rowData) => {
-        return <i className='text-gray-700 text-3xl pi pi-cloud-download'></i>;
+        return <i className='text-gray-700 text-3xl pi pi-cloud-download' onClick={handleDownload}></i>;
     };
 
     const verifiedFilterTemplate = (options) => {
@@ -339,11 +353,22 @@ const TableDemo = () => {
 
     const header1 = renderHeader1();
 
+
+    const router = useRouter();
+    const handleUploadRelease = () => {
+        router.push('/New-Release');
+    };
+
     return (
         <div className="grid">
             <div className="col-12">
                 <div className="card">
                     <h5>Releases</h5>
+                    <React.Fragment>
+                        <div style={{display: "flex", justifyContent: "flex-end"}} className="mb-5">
+                            <Button icon="pi pi-cloud-upload text-2xl" severity="sucess" onClick={handleUploadRelease} />
+                        </div>
+                    </React.Fragment>
                     <DataTable
                         value={customers1}
                         paginator
