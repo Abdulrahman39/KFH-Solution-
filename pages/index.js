@@ -50,10 +50,10 @@ const LoginPage = () => {
                             <Password inputid="password1" value={password} onChange={(e) => setPassword(e.target.value)} feedback={false} placeholder="Password" toggleMask className="w-full mb-5" inputClassName="w-full p-3 md:w-30rem"></Password>
 
                             <div className="flex align-items-center justify-content-between mb-5 gap-5">
-                                <div className="flex align-items-center">
-                                    <Checkbox inputid="rememberme1" checked={checked} onChange={(e) => setChecked(e.checked)} className="mr-2"></Checkbox>
-                                    <label htmlFor="rememberme1">Remember me</label>
-                                </div>
+                                {/*<div className="flex align-items-center">*/}
+                                {/*    <Checkbox inputid="rememberme1" checked={checked} onChange={(e) => setChecked(e.checked)} className="mr-2"></Checkbox>*/}
+                                {/*    <label htmlFor="rememberme1">Remember me</label>*/}
+                                {/*</div>*/}
                                 <a className="font-medium no-underline ml-2 text-right cursor-pointer" style={{ color: 'var(--primary-color)' }}>
                                     Forgot password?
                                 </a>
