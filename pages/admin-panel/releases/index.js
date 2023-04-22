@@ -403,7 +403,7 @@ const TableDemo = () => {
                                     <h1>Releases</h1>
                                     <p>Create, edit and manage releases</p>
                                 </div>
-                                <Button icon="pi pi-cloud-upload text-2xl" label='Create Release' className='h-4rem mt-3' severity="sucess" onClick={handleUploadRelease} />
+                                <Button icon="pi pi-cloud-upload text-2xl" label='Create Release' className='h-3rem mt-3' severity="sucess" onClick={handleUploadRelease} />
                             </div>
                         </React.Fragment>
                         <div className="card">
