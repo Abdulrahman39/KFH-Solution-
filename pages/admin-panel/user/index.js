@@ -328,15 +328,15 @@ const Crud = () => {
     let items = [
         {
             label: 'Projects', icon: 'pi pi-fw  pi-file', command: () => {
-                router.push('/projects')
+                router.push('/admin-panel/projects')
             }
         },
         {
             label: 'Releases', icon: 'pi pi-fw pi-tags', command: () => {
-                router.push('/releases')
+                router.push('/admin-panel/releases')
             }
         },
-        { label: 'users', icon: 'pi pi-fw pi-user' },
+        { label: 'users', icon: 'pi pi-fw pi-user', className: 'bg-green-100' },
     ]
     return (
         <div>
@@ -398,7 +398,7 @@ const Crud = () => {
 
                             {/* <Column field="category" header="Category" sortable body={categoryBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column> */}
                             {/* <Column field="rating" header="Reviews" body={ratingBodyTemplate} sortable></Column> */}
-                            <Column field="inventoryStatus" header="Department" body={statusBodyTemplate} sortable headerStyle={{ minWidth: '10rem' }}></Column>
+                            <Column field="inventoryStatus" header="Department" body={imageBodyTemplate} sortable headerStyle={{ minWidth: '10rem' }}></Column>
                             <Column body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
                         </DataTable>
 

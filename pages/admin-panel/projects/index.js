@@ -12,7 +12,7 @@ import { Toast } from 'primereact/toast';
 import { Toolbar } from 'primereact/toolbar';
 import { classNames } from 'primereact/utils';
 import React, { useEffect, useRef, useState } from 'react';
-import { ProductService } from '../../demo/service/ProductService';
+import { ProductService } from '../../../demo/service/ProductService';
 import { Divider } from 'primereact/divider';
 import { Avatar } from 'primereact/avatar';
 import { AvatarGroup } from 'primereact/avatargroup';
@@ -302,13 +302,11 @@ const Crud = () => {
 
     let items = [
         {
-            label: 'Projects', icon: 'pi pi-fw  pi-file', command: () => {
-                router.push('/projects')
-            }
+            label: 'Projects', icon: 'pi pi-fw  pi-file', className: 'bg-green-100'
         },
         {
             label: 'Releases', icon: 'pi pi-fw pi-tags', command: () => {
-                router.push('/releases')
+                router.push('/admin-panel/releases')
             }
         },
         { label: 'users', icon: 'pi pi-fw pi-user',command: () => {
