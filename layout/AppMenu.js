@@ -12,7 +12,7 @@ const AppMenu = () => {
             label: 'Home',
             items: [
                 { label: 'Projects', icon: 'pi pi-fw pi-home', to: '/projects' },
-                { label: 'Admin Panel', icon: 'pi pi-fw pi-home', to: '/admin-panel'}
+                { label: 'Admin Panel', icon: 'pi pi-fw pi-home', to: '/admin-panel/projects'}
             ]
         },
         // {
