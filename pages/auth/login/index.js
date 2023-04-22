@@ -7,9 +7,12 @@ import { Password } from 'primereact/password';
 import { LayoutContext } from '../../../layout/context/layoutcontext';
 import { InputText } from 'primereact/inputtext';
 import { classNames } from 'primereact/utils';
+import { Toast } from 'primereact/toast';
+import { useRef } from 'react';
 import newAuthStore from "../../../stores/authStore";
 
 const LoginPage = () => {
+    const toast = useRef(null);
     const [password, setPassword] = useState('');
     const [email, setEmail] = useState('');
     const [checked, setChecked] = useState(false);
@@ -19,17 +22,30 @@ const LoginPage = () => {
     const containerClassName = classNames('surface-ground flex align-items-center justify-content-center min-h-screen min-w-screen overflow-hidden', { 'p-input-filled': layoutConfig.inputStyle === 'filled' });
 
     const handleClick = async () => {
-        console.log({email, password});
-        const res = await newAuthStore.login({email, password});
+        // console.log({ email, password });
+        const res = await newAuthStore.login({ email, password });
 
-        if (res !== "")
-            await router.push('/');
+        if (res !== "") {
+            toast.current.show([
+                { severity: 'success', summary: 'Success', detail: 'Login Successful', life: 3000 },
+
+            ]);
+            await router.push('/projects');
+        }
+        else {
+            toast.current.show(
+               [ { severity: 'error', summary: 'Error', detail: 'Wrong Email or Password', life: 3150 }]
+            )
+        }
+
     };
 
     return (
+        
         <div className={containerClassName}>
+            <Toast ref={toast} />
             <div className="flex flex-column align-items-center justify-content-center">
-                <img src={`/layout/images/KFHLOGO.png`} alt="Sakai logo" className="mb-5 w-6rem flex-shrink-0" style={{borderRadius: '20px'}} />
+                <img src={`/layout/images/KFHLOGO.png`} alt="Sakai logo" className="mb-5 w-6rem flex-shrink-0" style={{ borderRadius: '20px' }} />
                 <div style={{ borderRadius: '56px', padding: '0.3rem', background: 'linear-gradient(180deg, var(--primary-color) 10%, rgba(33, 150, 243, 0) 30%)' }}>
                     <div className="w-full surface-card py-8 px-5 sm:px-8" style={{ borderRadius: '53px' }}>
                         <div className="text-center mb-5">
@@ -50,10 +66,10 @@ const LoginPage = () => {
                             <Password inputid="password1" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password" toggleMask className="w-full mb-5" inputClassName="w-full p-3 md:w-30rem"></Password>
 
                             <div className="flex align-items-center justify-content-between mb-5 gap-5">
-                                <div className="flex align-items-center">
+                                {/* <div className="flex align-items-center">
                                     <Checkbox inputid="rememberme1" checked={checked} onChange={(e) => setChecked(e.checked)} className="mr-2"></Checkbox>
                                     <label htmlFor="rememberme1">Remember me</label>
-                                </div>
+                                </div> */}
                                 <a className="font-medium no-underline ml-2 text-right cursor-pointer" style={{ color: 'var(--primary-color)' }}>
                                     Forgot password?
                                 </a>

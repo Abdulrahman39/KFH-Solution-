@@ -12,7 +12,7 @@ import { Toast } from 'primereact/toast';
 import { Toolbar } from 'primereact/toolbar';
 import { classNames } from 'primereact/utils';
 import React, { useEffect, useRef, useState } from 'react';
-import { ProductService } from '../../demo/service/ProductService';
+import { ProductService } from '../../../demo/service/ProductService';
 import { Divider } from 'primereact/divider';
 import { Avatar } from 'primereact/avatar';
 import { AvatarGroup } from 'primereact/avatargroup';
@@ -178,7 +178,7 @@ const Crud = () => {
         return (
             <React.Fragment>
                 <div className="my-2">
-                    <Button label="Create Project" icon="pi pi-plus" severity="sucess" className="mr-2" onClick={openNew} />
+                    <Button label="Create User" icon="pi pi-user-plus" severity="sucess" className="mr-2" onClick={openNew} />
                 </div>
             </React.Fragment>
         );
@@ -203,6 +203,31 @@ const Crud = () => {
     };
 
     const nameBodyTemplate = (rowData) => {
+        return (
+            <>
+                <span className="p-column-title">Name</span>
+                {rowData.name}
+            </>
+        );
+    };
+    const UsernameBodyTemplate = (rowData) => {
+        return (
+            <>
+                <span className="p-column-title">Name</span>
+                {rowData.name}
+            </>
+        );
+    }
+    const RolesBodyTemplate = (rowData) => {
+        return (
+            <>
+                <span className="p-column-title">Name</span>
+                {rowData.name}
+            </>
+        );
+    }
+
+    const EmailBodyTemplate = (rowData) => {
         return (
             <>
                 <span className="p-column-title">Name</span>
@@ -281,10 +306,10 @@ const Crud = () => {
     );
 
     const productDialogFooter = (
-        <>
+        <div className='flex justify-content-between'>
             <Button label="Cancel" icon="pi pi-times" text onClick={hideDialog} />
             <Button label="Save" icon="pi pi-check" text onClick={saveProduct} />
-        </>
+        </div>
     );
     const deleteProductDialogFooter = (
         <>
@@ -311,8 +336,7 @@ const Crud = () => {
                 router.push('/releases')
             }
         },
-        { label: 'users', icon: 'pi pi-fw pi-user',command: () => {
-            router.push('/admin-panel/user')} },
+        { label: 'users', icon: 'pi pi-fw pi-user' },
     ]
     return (
         <div>
@@ -336,7 +360,7 @@ const Crud = () => {
 
                 <div className="col">
                     <div className='flex justify-content-between'>
-                        <h2>Projects</h2>
+                        <h2>Users</h2>
                         <div className=' flex '>{leftToolbarTemplate()}</div>
                     </div>
                     {/* <Toolbar className="mb-4  border-0"  right={leftToolbarTemplate}></Toolbar> */}
@@ -365,33 +389,66 @@ const Crud = () => {
                         >
                             <Column selectionMode="multiple" headerStyle={{ width: '4rem' }}></Column>
                             {/* <Column field="code" header="Code" sortable body={codeBodyTemplate} headerStyle={{ minWidth: '15rem' }}></Column> */}
-                            <Column field="name" header="Name" sortable body={nameBodyTemplate} headerStyle={{ minWidth: '15rem' }}></Column>
+                            <Column field="name" header="Name" sortable body={nameBodyTemplate}></Column>
+                            <Column field="email" header="Email Address" sortable body={EmailBodyTemplate} headerStyle={{ minWidth: '15rem' }}></Column>
+                            <Column field="roles" header="Roles" body={RolesBodyTemplate} headerStyle={{ minWidth: '15rem' }} sortable></Column>
+
                             {/* <Column header="Image" body={imageBodyTemplate}></Column> */}
-                            <Column field="price" header="Description" body={priceBodyTemplate} sortable></Column>
+                            <Column field="username" header="Username" body={UsernameBodyTemplate} sortable></Column>
+
                             {/* <Column field="category" header="Category" sortable body={categoryBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column> */}
                             {/* <Column field="rating" header="Reviews" body={ratingBodyTemplate} sortable></Column> */}
-                            <Column field="inventoryStatus" header="Members" body={statusBodyTemplate} sortable headerStyle={{ minWidth: '10rem' }}></Column>
+                            <Column field="inventoryStatus" header="Department" body={statusBodyTemplate} sortable headerStyle={{ minWidth: '10rem' }}></Column>
                             <Column body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
                         </DataTable>
 
-                        <Dialog visible={productDialog} style={{ width: '750px' }} header="Add new project" modal className="p-fluid" footer={productDialogFooter} onHide={hideDialog}>
-                            {product.image && <img src={`/demo/images/product/${product.image}`} alt={product.image} width="150" className="mt-0 mx-auto mb-5 block shadow-2" />}
-                            <div className="field col-6">
-                                <label htmlFor="name">Project Name</label>
-                                <InputText id="name" value={product.name} onChange={(e) => onInputChange(e, 'name')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.name })} />
-                                {submitted && !product.name && <small className="p-invalid">Name is required.</small>}
-                            </div>
-                            <div className="field col-6">
-                                <label htmlFor="description">Description</label>
-                                <InputTextarea id="description" value={product.description} onChange={(e) => onInputChange(e, 'description')} required rows={3} cols={20} />
-                            </div>
+                        <Dialog visible={productDialog} style={{ width: '750px' }} header="Add New User" modal className="p-fluid" footer={productDialogFooter} onHide={hideDialog}>
+                            <div className='grid m-3'>
+                                <h4 className='col-12'>Deltails</h4>
+                                <div className='grid col-12 mb-3'>
+                                    <div className="field col-6 ">
+                                        <label htmlFor="name">First Name</label>
+                                        <InputText id="name" value={product.name} onChange={(e) => onInputChange(e, 'name')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.name })} />
+                                        {/* <label htmlFor="name">Last Name</label>
+                                    <InputText id="name" value={product.name} onChange={(e) => onInputChange(e, 'name')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.name })} /> */}
 
-                            <div className="field col-6">
-                                <MultiSelect value={null} options={null} optionLabel="name" display="chip"
-                                    placeholder="Select Members" maxSelectedLabels={3} className="w-full " />
+                                        {submitted && !product.name && <small className="p-invalid">Name is required.</small>}
+                                    </div>
+                                    <div className="field col-6 ">
+                                        <label htmlFor="name">Last Name</label>
+                                        <InputText id="name" value={product.name} onChange={(e) => onInputChange(e, 'name')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.name })} />
+
+                                        {submitted && !product.name && <small className="p-invalid">Name is required.</small>}
+                                    </div>
+                                </div>
+                                <div className='grid col-12 mb-3'>
+                                    <div className="field col-6 ">
+                                        <label htmlFor="name">Email</label>
+                                        <InputText id="name" value={product.name} onChange={(e) => onInputChange(e, 'name')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.name })} />
+                                        {/* <label htmlFor="name">Last Name</label>
+                                    <InputText id="name" value={product.name} onChange={(e) => onInputChange(e, 'name')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.name })} /> */}
+
+                                        {submitted && !product.name && <small className="p-invalid">Name is required.</small>}
+                                    </div>
+                                    <div className="field col-6 ">
+                                        <label htmlFor="name">Department</label>
+                                        <MultiSelect value={null} options={null} optionLabel="name" display="chip"
+                                            placeholder="Select Depatment" maxSelectedLabels={3} className="w-full " />
+                                        {submitted && !product.name && <small className="p-invalid">Name is required.</small>}
+                                    </div>
+                                </div>
+
+
+                                <h4 className='col-12'>Roles</h4>
+
+                                <div className="field col-6 ">
+                                    <label>User's roles</label>
+                                    <MultiSelect value={null}  options={null} optionLabel="name" display="chip"
+                                        placeholder="Select Roles" maxSelectedLabels={3} className="w-full md:w-20rem mb-2" />
+                                        <small className=' text-color-secondary'>User can have one or more roles</small>
+                                </div>
+
                             </div>
-
-
                         </Dialog>
 
                         <Dialog visible={deleteProductDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteProductDialogFooter} onHide={hideDeleteProductDialog}>

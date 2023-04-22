@@ -7,11 +7,11 @@ class AuthStore {
         try {
             const res = await instance.post("auth/login", userInfo);
             console.log(res.token);
-            alert("Login Successful!");
+            // alert("Login Successful!");
             return res.token;
         } catch (error) {
             console.error(error);
-            alert(`Login failed!`);
+            // alert(`Login failed!`);
             return "";
         }
     };
