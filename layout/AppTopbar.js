@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import Router, { useRouter } from 'next/router';
 import { classNames } from 'primereact/utils';
 import React, { forwardRef, useContext, useImperativeHandle, useRef } from 'react';
 import { LayoutContext } from './context/layoutcontext';
@@ -20,7 +19,7 @@ const AppTopbar = forwardRef((props, ref) => {
         <div className="layout-topbar ">
             <Link href="/" className="layout-topbar-logo">
                 {/* <img src={`/layout/images/logo-${layoutConfig.colorScheme !== 'light' ? 'white' : 'dark'}.svg`} width="47.22px" height={'35px'} widt={'true'} alt="logo" /> */}
-                <img src ="/layout/images/KFHLOGO.png" width="40px" style={{borderRadius: "8px"}} height={'40px'} widt={'true'} alt="logo"/>
+                <img src="/layout/images/KFHLOGO.png" width="40px" style={{ borderRadius: "8px" }} height={'40px'} widt={'true'} alt="logo" />
                 <span>KFH</span>
             </Link>
 
@@ -37,10 +36,12 @@ const AppTopbar = forwardRef((props, ref) => {
                 {/*    <i className="pi pi-calendar"></i>*/}
                 {/*    <span>Calendar</span>*/}
                 {/*</button>*/}
-                <button type="button" className="p-link layout-topbar-button">
-                    <i className="pi pi-user"></i>
-                    <span>Profile</span>
-                </button>
+                <Link href="/" className="">
+                    <button type="button" className="p-link layout-topbar-button"  >
+                        <i className="pi pi-user"></i>
+                        <span>Profile</span>
+                    </button>
+                </Link>
                 {/*<Link href="/documentation">*/}
                 {/*    <button type="button" className="p-link layout-topbar-button">*/}
                 {/*        <i className="pi pi-cog"></i>*/}

@@ -297,7 +297,7 @@ const Crud = () => {
 
     const header = (
         <div className="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
-            <h5 className="m-0">Manage Projects</h5>
+            <h5 className="m-0">Manage Users</h5>
             <span className="block mt-2 md:mt-0 p-input-icon-left">
                 <i className="pi pi-search" />
                 <InputText type="search" onChange={(e) => setGlobalFilter(e.target.value)} placeholder="Search..." />
@@ -340,23 +340,19 @@ const Crud = () => {
     ]
     return (
         <div>
-            <h1>Admin Panel</h1>
+            <h1 className=' text-center lg:text-left'>Admin Panel</h1>
 
-            <div className="grid gap-3 mt-5 ">
+            <div className="grid  mt-5 ">
 
-                <div className='col-2 '>
-                    <p className='text-center text-xl'>Administration panel</p>
+            <div className='m-5 w-full  lg:w-17rem'>
+                    <p className='text-center text-xl col-12'>Administration panel</p>
 
                     <div className='col-12 flex justify-content-center align-content-center text-center w-full'>
                         <Menu className='w-full justify-content-center ' style={{ background: 'transparent', border: 0 }} model={items}></Menu>
                     </div>
 
-                    {/* <div className='col-12 justify-content-center align-content-center text-center '><Button text icon="pi pi-file" label='Projects'></Button></div>
-                    <div className='col-12 justify-content-center align-content-center text-center'><Button text icon="pi pi-tags" label="Releses"></Button></div>
-                    <div className='col-12 justify-content-center align-content-center text-center'><Button text icon="pi pi-user" label="users"></Button></div> */}
-
+                
                 </div>
-                <Divider layout='vertical' />
 
                 <div className="col">
                     <div className='flex justify-content-between'>
@@ -364,7 +360,7 @@ const Crud = () => {
                         <div className=' flex '>{leftToolbarTemplate()}</div>
                     </div>
                     {/* <Toolbar className="mb-4  border-0"  right={leftToolbarTemplate}></Toolbar> */}
-                    <p className='text-lg'>Create, edit and manage Projects and who has access to each project.</p>
+                    <p className='lg:text-lg'>Create, edit and manage Projects and who has access to each project.</p>
                     <div className="card">
 
                         <Toast ref={toast} />
@@ -379,7 +375,7 @@ const Crud = () => {
                             paginator
                             rows={10}
                             rowsPerPageOptions={[5, 10, 25]}
-                            className="datatable-responsive"
+                            className="datatable-responsive lg:w-full md:w-full w-19rem"
                             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
                             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products"
                             globalFilter={globalFilter}

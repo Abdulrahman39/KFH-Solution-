@@ -272,8 +272,8 @@ const Crud = () => {
 
     const header = (
         <div className="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
-            <h5 className="m-0">Manage Projects</h5>
-            <span className="block mt-2 md:mt-0 p-input-icon-left">
+            <h5 className="m-0 lg:text-lg ">Manage Projects</h5>
+            <span className="block mt-3 md:mt-0 p-input-icon-left">
                 <i className="pi pi-search" />
                 <InputText type="search" onChange={(e) => setGlobalFilter(e.target.value)} placeholder="Search..." />
             </span>
@@ -302,7 +302,7 @@ const Crud = () => {
 
     let items = [
         {
-            label: 'Projects', icon: 'pi pi-fw  pi-file', className: 'bg-green-100'
+            label: 'Projects', icon: 'pi pi-fw  pi-file', className: 'bg-green-100 text-center'
         },
         {
             label: 'Releases', icon: 'pi pi-fw pi-tags', command: () => {
@@ -316,21 +316,17 @@ const Crud = () => {
         <div>
             <h1>Admin Panel</h1>
 
-            <div className="grid gap-3 mt-5 ">
+            <div className="grid  mt-5  ">
 
-                <div className='col-2 '>
-                    <p className='text-center text-xl'>Administration panel</p>
+                <div className='m-5 w-full  lg:w-17rem'>
+                    <p className='text-center text-xl col-12'>Administration panel</p>
 
                     <div className='col-12 flex justify-content-center align-content-center text-center w-full'>
                         <Menu className='w-full justify-content-center ' style={{ background: 'transparent', border: 0 }} model={items}></Menu>
                     </div>
 
-                    {/* <div className='col-12 justify-content-center align-content-center text-center '><Button text icon="pi pi-file" label='Projects'></Button></div>
-                    <div className='col-12 justify-content-center align-content-center text-center'><Button text icon="pi pi-tags" label="Releses"></Button></div>
-                    <div className='col-12 justify-content-center align-content-center text-center'><Button text icon="pi pi-user" label="users"></Button></div> */}
-
+                
                 </div>
-                <Divider layout='vertical' />
 
                 <div className="col">
                     <div className='flex justify-content-between'>
@@ -338,7 +334,7 @@ const Crud = () => {
                         <div className=' flex '>{leftToolbarTemplate()}</div>
                     </div>
                     {/* <Toolbar className="mb-4  border-0"  right={leftToolbarTemplate}></Toolbar> */}
-                    <p className='text-lg'>Create, edit and manage Projects and who has access to each project.</p>
+                    <p className='lg:text-lg'>Create, edit and manage Projects and who has access to each project.</p>
                     <div className="card">
 
                         <Toast ref={toast} />
@@ -353,7 +349,7 @@ const Crud = () => {
                             paginator
                             rows={10}
                             rowsPerPageOptions={[5, 10, 25]}
-                            className="datatable-responsive"
+                            className="datatable-responsive lg:w-full md:w-full w-19rem"
                             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
                             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products"
                             globalFilter={globalFilter}
@@ -374,17 +370,17 @@ const Crud = () => {
 
                         <Dialog visible={productDialog} style={{ width: '750px' }} header="Add new project" modal className="p-fluid" footer={productDialogFooter} onHide={hideDialog}>
                             {product.image && <img src={`/demo/images/product/${product.image}`} alt={product.image} width="150" className="mt-0 mx-auto mb-5 block shadow-2" />}
-                            <div className="field col-6">
+                            <div className="field mt-2 lg:col-6">
                                 <label htmlFor="name">Project Name</label>
                                 <InputText id="name" value={product.name} onChange={(e) => onInputChange(e, 'name')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.name })} />
                                 {submitted && !product.name && <small className="p-invalid">Name is required.</small>}
                             </div>
-                            <div className="field col-6">
+                            <div className="field lg:col-6">
                                 <label htmlFor="description">Description</label>
                                 <InputTextarea id="description" value={product.description} onChange={(e) => onInputChange(e, 'description')} required rows={3} cols={20} />
                             </div>
 
-                            <div className="field col-6">
+                            <div className="field lg:col-6">
                                 <MultiSelect value={null} options={null} optionLabel="name" display="chip"
                                     placeholder="Select Members" maxSelectedLabels={3} className="w-full " />
                             </div>

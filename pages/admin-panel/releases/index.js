@@ -380,27 +380,23 @@ const TableDemo = () => {
     return (
         <div>
             <h1>Admin Panel</h1>
-            <div className="grid gap-3 mt-5 ">
-                <div className='col-2 '>
-                    <p className='text-center text-xl'>Administration panel</p>
+            <div className="grid  mt-5 ">
+            <div className='m-5 w-full  lg:w-17rem'>
+                    <p className='text-center text-xl col-12'>Administration panel</p>
 
                     <div className='col-12 flex justify-content-center align-content-center text-center w-full'>
                         <Menu className='w-full justify-content-center ' style={{ background: 'transparent', border: 0 }} model={items}></Menu>
                     </div>
 
-                    {/* <div className='col-12 justify-content-center align-content-center text-center '><Button text icon="pi pi-file" label='Projects'></Button></div>
-                    <div className='col-12 justify-content-center align-content-center text-center'><Button text icon="pi pi-tags" label="Releses"></Button></div>
-                    <div className='col-12 justify-content-center align-content-center text-center'><Button text icon="pi pi-user" label="users"></Button></div> */}
-
+                
                 </div>
-                <Divider layout='vertical' />
                
                     <div className="col">
 
                         <React.Fragment>
                             <div style={{ display: "flex", }} className="mb-5 flex justify-content-between">
                                 <div>
-                                    <h1>Releases</h1>
+                                    <h2>Releases</h2>
                                     <p>Create, edit and manage releases</p>
                                 </div>
                                 <Button icon="pi pi-cloud-upload text-2xl" label='Create Release' className='h-3rem mt-3' severity="sucess" onClick={handleUploadRelease} />
@@ -411,7 +407,8 @@ const TableDemo = () => {
                             <DataTable
                                 value={customers1}
                                 paginator
-                                className="p-datatable-gridlines"
+                                className="p-datatable-gridlines lg:w-full md:w-full w-19rem"                          
+
                                 showGridlines
                                 rows={10}
                                 dataKey="id"
