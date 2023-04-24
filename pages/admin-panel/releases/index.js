@@ -394,7 +394,7 @@ const TableDemo = () => {
 
                 </div>
                 <Divider layout='vertical' />
-                <div className="grid">
+               
                     <div className="col">
 
                         <React.Fragment>
@@ -441,7 +441,7 @@ const TableDemo = () => {
                     </div>
 
 
-                </div>
+               
             </div>
         </div>
     );

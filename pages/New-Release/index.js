@@ -1,24 +1,45 @@
-import React, {useRef, useState} from 'react';
+import React, { useRef, useState } from 'react';
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 import { InputTextarea } from 'primereact/inputtextarea';
 import { Dropdown } from 'primereact/dropdown';
-import {Tooltip} from "primereact/tooltip";
-import {FileUpload} from "primereact/fileupload";
-import {Toast} from "primereact/toast";
-import {Tag} from "primereact/tag";
-import {ProgressBar} from "primereact/progressbar";
-import {useRouter} from "next/router";
+import { Tooltip } from "primereact/tooltip";
+import { FileUpload } from "primereact/fileupload";
+import { Toast } from "primereact/toast";
+import { Tag } from "primereact/tag";
+import { ProgressBar } from "primereact/progressbar";
+import { useRouter } from "next/router";
 
 const FormLayoutDemo = () => {
     const [dropdownItem, setDropdownItem] = useState(null);
     const dropdownItems = [
-        { name: 'Option 1', code: 'Option 1' },
-        { name: 'Option 2', code: 'Option 2' },
-        { name: 'Option 3', code: 'Option 3' }
+        { name: 'Android', code: 'pi-android text-primary', icon: 'pi pi-android' },
+        { name: 'IOS', code: 'pi-apple text-base', icon: 'pi pi-apple' },
     ];
 
+    const selectedPlatformTemplate = (option, props) => {
+        if (option) {
+            return (
+                <div className="flex align-items-center">
 
+                    <div>{option.name}</div>
+                    <i className={'ml-2 pi ' + option.code}></i>
+                </div>
+            );
+        }
+
+        return <span>{props.placeholder}</span>;
+    };
+
+    const PlatormOptionTemplate = (option) => {
+        return (
+            <div className="flex align-items-center">
+
+                <div>{option.name}</div>
+                <i className={'ml-2 pi ' + option.code} />
+            </div>
+        );
+    };
     const toast = useRef(null);
     const [totalSize, setTotalSize] = useState(0);
     const fileUploadRef = useRef(null);
@@ -117,11 +138,11 @@ const FormLayoutDemo = () => {
                         </div>
                         <div className="field col-12 md:col-6">
                             <label htmlFor="state">Project</label>
-                            <Dropdown id="state" value={dropdownItem} onChange={(e) => setDropdownItem(e.value)} options={dropdownItems} optionLabel="name" placeholder="Select One"></Dropdown>
+                            <InputText id="firstname2" type="text" />
                         </div>
                         <div className="field col-12 md:col-6">
                             <label htmlFor="state">Release Platform</label>
-                            <Dropdown id="state" value={dropdownItem} onChange={(e) => setDropdownItem(e.value)} options={dropdownItems} optionLabel="name" placeholder="Select One"></Dropdown>
+                            <Dropdown id="state" value={dropdownItem} onChange={(e) => setDropdownItem(e.value)} options={dropdownItems} valueTemplate={selectedPlatformTemplate} itemTemplate={PlatormOptionTemplate} optionLabel="name" placeholder="Select One"></Dropdown>
                         </div>
                         <div className="field col-12 md:col-6">
                             <label htmlFor="lastname2">SIT Server</label>
@@ -139,15 +160,15 @@ const FormLayoutDemo = () => {
                                 <Tooltip target=".custom-choose-btn" content="Choose" position="bottom" />
                                 <Tooltip target=".custom-cancel-btn" content="Clear" position="bottom" />
 
-                                <FileUpload ref={fileUploadRef} name="demo[]" url="/api/upload" multiple accept="image/*" maxFileSize={1000000}
-                                            onUpload={onTemplateUpload} onSelect={onTemplateSelect} onError={onTemplateClear} onClear={onTemplateClear}
-                                            headerTemplate={headerTemplate} itemTemplate={itemTemplate} emptyTemplate={emptyTemplate}
-                                            chooseOptions={chooseOptions} cancelOptions={cancelOptions} />
+                                <FileUpload ref={fileUploadRef} name="demo[]" url="/api/upload"  multiple accept="image/*" maxFileSize={1000000}
+                                    onUpload={onTemplateUpload} onSelect={onTemplateSelect} onError={onTemplateClear} onClear={onTemplateClear}
+                                    headerTemplate={headerTemplate} itemTemplate={itemTemplate} emptyTemplate={emptyTemplate}
+                                    chooseOptions={chooseOptions} cancelOptions={cancelOptions} />
                             </div>
                         </div>
-                        <div className="field col-12" style={{display: "flex", justifyContent: "flex-end"}}>
+                        <div className="field col-12" style={{ display: "flex", justifyContent: "flex-end" }}>
                             <React.Fragment>
-                                <div style={{width: "13%"}}>
+                                <div style={{ width: "13%" }}>
                                     <Button label="Upload Release" icon="pi pi-cloud-upload" severity="sucess" className="mr-2" onClick={handleUploadRelease} />
                                 </div>
                             </React.Fragment>
