@@ -313,8 +313,8 @@ const Crud = () => {
             router.push('/admin-panel/user')} },
     ]
     return (
-        <div>
-            <h1>Admin Panel</h1>
+        <div className=''>
+            <h1 className='card text-center shadow-1 '>Admin Panel</h1>
 
             <div className="grid  mt-5  ">
 
@@ -327,6 +327,7 @@ const Crud = () => {
 
                 
                 </div>
+                <Divider layout='vertical' className='hidden lg:block'/>
 
                 <div className="col">
                     <div className='flex justify-content-between'>
