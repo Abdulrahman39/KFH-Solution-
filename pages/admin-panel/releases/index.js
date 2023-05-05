@@ -379,7 +379,7 @@ const TableDemo = () => {
 
     return (
         <div>
-            <h1>Admin Panel</h1>
+            <h1 className='card text-center shadow-1'>Admin Panel</h1>
             <div className="grid  mt-5 ">
             <div className='m-5 w-full  lg:w-17rem'>
                     <p className='text-center text-xl col-12'>Administration panel</p>
@@ -390,7 +390,8 @@ const TableDemo = () => {
 
                 
                 </div>
-               
+                <Divider layout='vertical' className='hidden lg:block'/>
+
                     <div className="col">
 
                         <React.Fragment>

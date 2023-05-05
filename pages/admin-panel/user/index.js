@@ -340,7 +340,7 @@ const Crud = () => {
     ]
     return (
         <div>
-            <h1 className=' text-center lg:text-left'>Admin Panel</h1>
+            <h1 className='card text-center shadow-1'>Admin Panel</h1>
 
             <div className="grid  mt-5 ">
 
@@ -353,6 +353,7 @@ const Crud = () => {
 
                 
                 </div>
+                <Divider layout='vertical' className='hidden lg:block'/>
 
                 <div className="col">
                     <div className='flex justify-content-between'>
@@ -386,8 +387,8 @@ const Crud = () => {
                             <Column selectionMode="multiple" headerStyle={{ width: '4rem' }}></Column>
                             {/* <Column field="code" header="Code" sortable body={codeBodyTemplate} headerStyle={{ minWidth: '15rem' }}></Column> */}
                             <Column field="name" header="Name" sortable body={nameBodyTemplate}></Column>
-                            <Column field="email" header="Email Address" sortable body={EmailBodyTemplate} headerStyle={{ minWidth: '15rem' }}></Column>
-                            <Column field="roles" header="Roles" body={RolesBodyTemplate} headerStyle={{ minWidth: '15rem' }} sortable></Column>
+                            <Column field="email" header="Email Address" sortable body={EmailBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
+                            <Column field="roles" header="Roles" body={RolesBodyTemplate} headerStyle={{ minWidth: '10rem' }} sortable></Column>
 
                             {/* <Column header="Image" body={imageBodyTemplate}></Column> */}
                             <Column field="username" header="Username" body={UsernameBodyTemplate} sortable></Column>
