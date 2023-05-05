@@ -9,13 +9,24 @@ import { Toast } from "primereact/toast";
 import { Tag } from "primereact/tag";
 import { ProgressBar } from "primereact/progressbar";
 import { useRouter } from "next/router";
+import projectsStore from "../../stores/projectsStore";
+import projectCard from "../projects/components/ProjectCard";
 
 const FormLayoutDemo = () => {
     const [dropdownItem, setDropdownItem] = useState(null);
+
+    const [name, setName] = useState('');
+    const [version, setVersion] = useState('');
+    const [platform, setPlatform] = useState('');
+    const [server_ip, setSit] = useState('');
+    const [description, setDescription] = useState('');
+
     const dropdownItems = [
         { name: 'Android', code: 'pi-android text-primary', icon: 'pi pi-android' },
         { name: 'IOS', code: 'pi-apple text-base', icon: 'pi pi-apple' },
     ];
+
+    // const formData = new FormData();
 
     const selectedPlatformTemplate = (option, props) => {
         if (option) {
@@ -48,8 +59,14 @@ const FormLayoutDemo = () => {
         let _totalSize = totalSize;
         let files = e.files;
 
+        let i = 1;
         Object.keys(files).forEach((key) => {
+            console.log(files[key]);
+            projectsStore.formData.append(`file${i}`, files[key]);
+            console.log(`file${i}`);
+            console.log(projectsStore.formData.get(`file${i}`));
             _totalSize += files[key].size || 0;
+            i++;
         });
 
         setTotalSize(_totalSize);
@@ -62,6 +79,7 @@ const FormLayoutDemo = () => {
             _totalSize += file.size || 0;
         });
 
+        console.log("test123");
         setTotalSize(_totalSize);
         toast.current.show({ severity: 'info', summary: 'Success', detail: 'File Uploaded' });
     };
@@ -122,7 +140,19 @@ const FormLayoutDemo = () => {
     const cancelOptions = { icon: 'pi pi-fw pi-times', iconOnly: true, className: 'custom-cancel-btn p-button-danger p-button-rounded p-button-outlined w-3rem' };
 
     const router = useRouter();
-    const handleUploadRelease = () => {
+    const handleUploadRelease = async () => {
+        const releaseObj = {
+            name,
+            version,
+            description,
+            server_ip,
+            "projectId": projectsStore.currentProject.id,
+            "platform": platform.name.toUpperCase()
+        };
+
+        console.log(releaseObj);
+        projectsStore.formData.append("release", JSON.stringify(releaseObj));
+        await projectsStore.createRelease();
         router.push('/releases');
     };
 
@@ -134,23 +164,23 @@ const FormLayoutDemo = () => {
                     <div className="p-fluid formgrid grid">
                         <div className="field col-12 md:col-6">
                             <label htmlFor="firstname2">Release Name</label>
-                            <InputText id="firstname2" type="text" />
+                            <InputText id="firstname2" type="text" value={name} onChange={(e) => setName(e.target.value)} />
                         </div>
                         <div className="field col-12 md:col-6">
-                            <label htmlFor="state">Project</label>
-                            <InputText id="firstname2" type="text" />
+                            <label htmlFor="state">Release Version</label>
+                            <InputText id="firstname2" type="text" value={version} onChange={(e) => setVersion(e.target.value)} />
                         </div>
                         <div className="field col-12 md:col-6">
                             <label htmlFor="state">Release Platform</label>
-                            <Dropdown id="state" value={dropdownItem} onChange={(e) => setDropdownItem(e.value)} options={dropdownItems} valueTemplate={selectedPlatformTemplate} itemTemplate={PlatormOptionTemplate} optionLabel="name" placeholder="Select One"></Dropdown>
+                            <Dropdown id="state" value={platform} onChange={(e) => setPlatform(e.value)} options={dropdownItems} valueTemplate={selectedPlatformTemplate} itemTemplate={PlatormOptionTemplate} optionLabel="name" placeholder="Select One"></Dropdown>
                         </div>
                         <div className="field col-12 md:col-6">
                             <label htmlFor="lastname2">SIT Server</label>
-                            <InputText id="lastname2" type="text" />
+                            <InputText id="lastname2" type="text" value={server_ip} onChange={(e) => setSit(e.target.value)} />
                         </div>
                         <div className="field col-12">
                             <label htmlFor="address">Description</label>
-                            <InputTextarea id="address" rows="4" />
+                            <InputTextarea id="address" rows="4" value={description} onChange={(e) => setDescription(e.target.value)} />
                         </div>
                         <div className="field col-12">
                             <label htmlFor="state">Release Files</label>
@@ -160,7 +190,7 @@ const FormLayoutDemo = () => {
                                 <Tooltip target=".custom-choose-btn" content="Choose" position="bottom" />
                                 <Tooltip target=".custom-cancel-btn" content="Clear" position="bottom" />
 
-                                <FileUpload ref={fileUploadRef} name="demo[]" url="/api/upload"  multiple accept="image/*" maxFileSize={1000000}
+                                <FileUpload ref={fileUploadRef} name="demo[]" url="/api/upload"  multiple accept="image/*"
                                     onUpload={onTemplateUpload} onSelect={onTemplateSelect} onError={onTemplateClear} onClear={onTemplateClear}
                                     headerTemplate={headerTemplate} itemTemplate={itemTemplate} emptyTemplate={emptyTemplate}
                                     chooseOptions={chooseOptions} cancelOptions={cancelOptions} />

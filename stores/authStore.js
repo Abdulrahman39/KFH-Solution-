@@ -1,18 +1,38 @@
 import instance from "./instance";
+import projectsStore from "./projectsStore";
 
 class AuthStore {
     token = null;
+    user = null;
 
     login = async (userInfo) => {
         try {
             const res = await instance.post("auth/login", userInfo);
             console.log(res.token);
             // alert("Login Successful!");
+            await this.getUser(res.token);
+            await projectsStore.getProject();
+            console.log(this.user);
             return res.token;
         } catch (error) {
             console.error(error);
             // alert(`Login failed!`);
             return "";
+        }
+    };
+
+    getUser = async (token) => {
+        localStorage.setItem("token", token);
+        console.log(`Bearer ${token}`);
+        instance.defaults.headers.common.Authorization = `Bearer ${token}`;
+        console.log(instance.defaults.headers.common.Authorization);
+
+        try {
+            const res = await instance.get("user/whoAmI");
+            console.log(res);
+            this.user = res;
+        } catch (error) {
+            console.error(error);
         }
     };
 }
