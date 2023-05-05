@@ -9,6 +9,7 @@ import { InputTextarea } from 'primereact/inputtextarea';
 import { RadioButton } from 'primereact/radiobutton';
 import { Rating } from 'primereact/rating';
 import { Toast } from 'primereact/toast';
+import { Dropdown } from 'primereact/dropdown'
 import { Toolbar } from 'primereact/toolbar';
 import { classNames } from 'primereact/utils';
 import React, { useEffect, useRef, useState } from 'react';
@@ -19,9 +20,10 @@ import { AvatarGroup } from 'primereact/avatargroup';
 import { MultiSelect } from 'primereact/multiselect';
 import { Menu } from 'primereact/menu';
 import { useRouter } from 'next/router';
+import newProjectsStore from '../../../stores/projectsStore';
 
 
-const Crud = () => {
+const User = () => {
     let emptyProduct = {
         id: null,
         name: '',
@@ -62,6 +64,7 @@ const Crud = () => {
     const hideDialog = () => {
         setSubmitted(false);
         setProductDialog(false);
+        setUser(emptyuser)
     };
 
     const hideDeleteProductDialog = () => {
@@ -74,8 +77,9 @@ const Crud = () => {
 
     const saveProduct = () => {
         setSubmitted(true);
-
+        
         if (product.name.trim()) {
+
             let _products = [...products];
             let _product = { ...product };
             if (product.id) {
@@ -152,27 +156,17 @@ const Crud = () => {
         toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Products Deleted', life: 3000 });
     };
 
-    const onCategoryChange = (e) => {
-        let _product = { ...product };
-        _product['category'] = e.value;
-        setProduct(_product);
-    };
 
-    const onInputChange = (e, name) => {
-        const val = (e.target && e.target.value) || '';
-        let _product = { ...product };
-        _product[`${name}`] = val;
 
-        setProduct(_product);
-    };
+    // const onInputChange = (e, name) => {
+    //     const val = (e.target && e.target.value) || '';
+    //     let _product = { ...product };
+    //     _product[`${name}`] = val;
 
-    const onInputNumberChange = (e, name) => {
-        const val = e.value || 0;
-        let _product = { ...product };
-        _product[`${name}`] = val;
+    //     setProduct(_product);
+    // };
 
-        setProduct(_product);
-    };
+
 
     const leftToolbarTemplate = () => {
         return (
@@ -325,6 +319,82 @@ const Crud = () => {
     );
     const router = useRouter();
 
+    // to set data to any feild 
+    const onInputChange = (e, name) => {
+        const val = (e.target && e.target.value) || '';
+        console.log(val)
+        let _user = { ...user };
+        _user[`${name}`] = val;
+
+        setUser(_user);
+    };
+    // add user
+    const emptyuser = {
+        firstname: '',
+        lastname: '',
+        email: '',
+        department: [],
+        roles: [],
+    }
+    const [user, setUser] = useState(emptyuser)
+    const Roles = [{ name: 'Developer' }, { name: 'Admin' }, { name: 'Tester' }]
+    const departments = [{ name: 'IT' }, { name: 'HR' }, { name: 'PR' }]
+    const addUserCode = () => {
+        return (
+            <div className='grid m-3'>
+                <h4 className='col-12'>Deltails</h4>
+
+                <div className='grid col-12 mb-3'>
+
+                    <div className="field col-6 ">
+                        <label htmlFor="name">First Name</label>
+                        <InputText id="firstname" placeholder='First name' value={user.firstname} onChange={(e) => onInputChange(e, 'firstname')} required autoFocus className={classNames({ 'p-invalid': submitted && !user.firstname })} />
+
+                        {submitted && !user.firstname && <small className="p-invalid text-red-500">First name is required.</small>}
+                    </div>
+
+                    <div className="field col-6 ">
+                        <label htmlFor="lastname">Last Name</label>
+                        <InputText id="lastname" placeholder='Last name' value={user.lastname} onChange={(e) => onInputChange(e, 'lastname')} required autoFocus className={classNames({ 'p-invalid': submitted && !user.lastname })} />
+
+                        {submitted && !user.lastname && <small className="p-invalid text-red-500">Last name is required.</small>}
+                    </div>
+
+                </div>
+
+
+                <div className='grid col-12 mb-3'>
+
+                    <div className="field col-6 ">
+                        <label htmlFor="email">Email</label>
+                        <InputText id="email" placeholder='Email' type='email' value={user.email} onChange={(e) => onInputChange(e, 'email')} required autoFocus className={classNames({ 'p-invalid': submitted && !user.email })} />
+                        {submitted && !user.email && <small className="p-invalid text-red-500">Email is required.</small>}
+                    </div>
+
+                    <div className="field col-6 ">
+                        <label htmlFor="department">Department</label>
+                        <Dropdown value={user.department} onChange={(e) => onInputChange(e, 'department')} options={departments} optionLabel="name"
+                            placeholder="Select Department" className={classNames({ 'p-invalid': submitted && user.department.length==0 })} />
+                        {submitted && user.department.length==0 && <small className="p-invalid text-red-500">Department is required.</small>}
+                    </div>
+
+                </div>
+
+                {/* roles */}
+                <h4 className='col-12'>Roles</h4>
+                <div className="field col-6 ">
+                    <label>User's roles</label>
+                    <MultiSelect value={user.roles} options={Roles} optionLabel="name" display="chip" onChange={(e) => onInputChange(e, 'roles')}
+                        placeholder="Select Roles" className={classNames({ 'p-invalid': submitted && user.roles.length==0 })} />
+                    {!submitted && <small className=' text-color-secondary'>User can have one or more roles</small>}
+                    {submitted && user.roles.length==0 && <small className="p-invalid text-red-500">Select at least one role.</small>}
+
+                </div>
+
+            </div>
+        );
+    };
+
     let items = [
         {
             label: 'Projects', icon: 'pi pi-fw  pi-file', command: () => {
@@ -344,16 +414,16 @@ const Crud = () => {
 
             <div className="grid  mt-5 ">
 
-            <div className='m-5 w-full  lg:w-17rem'>
+                <div className='m-5 w-full  lg:w-17rem'>
                     <p className='text-center text-xl col-12'>Administration panel</p>
 
                     <div className='col-12 flex justify-content-center align-content-center text-center w-full'>
                         <Menu className='w-full justify-content-center ' style={{ background: 'transparent', border: 0 }} model={items}></Menu>
                     </div>
 
-                
+
                 </div>
-                <Divider layout='vertical' className='hidden lg:block'/>
+                <Divider layout='vertical' className='hidden lg:block' />
 
                 <div className="col">
                     <div className='flex justify-content-between'>
@@ -385,67 +455,20 @@ const Crud = () => {
                             responsiveLayout="scroll"
                         >
                             <Column selectionMode="multiple" headerStyle={{ width: '4rem' }}></Column>
-                            {/* <Column field="code" header="Code" sortable body={codeBodyTemplate} headerStyle={{ minWidth: '15rem' }}></Column> */}
                             <Column field="name" header="Name" sortable body={nameBodyTemplate}></Column>
                             <Column field="email" header="Email Address" sortable body={EmailBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
                             <Column field="roles" header="Roles" body={RolesBodyTemplate} headerStyle={{ minWidth: '10rem' }} sortable></Column>
 
-                            {/* <Column header="Image" body={imageBodyTemplate}></Column> */}
                             <Column field="username" header="Username" body={UsernameBodyTemplate} sortable></Column>
 
-                            {/* <Column field="category" header="Category" sortable body={categoryBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column> */}
-                            {/* <Column field="rating" header="Reviews" body={ratingBodyTemplate} sortable></Column> */}
-                            <Column field="inventoryStatus" header="Department" body={imageBodyTemplate} sortable headerStyle={{ minWidth: '10rem' }}></Column>
+                            <Column field="Department" header="Department" body={imageBodyTemplate} sortable headerStyle={{ minWidth: '10rem' }}></Column>
                             <Column body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
                         </DataTable>
 
+
+                        {/* Add new user */}
                         <Dialog visible={productDialog} style={{ width: '750px' }} header="Add New User" modal className="p-fluid" footer={productDialogFooter} onHide={hideDialog}>
-                            <div className='grid m-3'>
-                                <h4 className='col-12'>Deltails</h4>
-                                <div className='grid col-12 mb-3'>
-                                    <div className="field col-6 ">
-                                        <label htmlFor="name">First Name</label>
-                                        <InputText id="name" value={product.name} onChange={(e) => onInputChange(e, 'name')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.name })} />
-                                        {/* <label htmlFor="name">Last Name</label>
-                                    <InputText id="name" value={product.name} onChange={(e) => onInputChange(e, 'name')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.name })} /> */}
-
-                                        {submitted && !product.name && <small className="p-invalid">Name is required.</small>}
-                                    </div>
-                                    <div className="field col-6 ">
-                                        <label htmlFor="name">Last Name</label>
-                                        <InputText id="name" value={product.name} onChange={(e) => onInputChange(e, 'name')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.name })} />
-
-                                        {submitted && !product.name && <small className="p-invalid">Name is required.</small>}
-                                    </div>
-                                </div>
-                                <div className='grid col-12 mb-3'>
-                                    <div className="field col-6 ">
-                                        <label htmlFor="name">Email</label>
-                                        <InputText id="name" value={product.name} onChange={(e) => onInputChange(e, 'name')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.name })} />
-                                        {/* <label htmlFor="name">Last Name</label>
-                                    <InputText id="name" value={product.name} onChange={(e) => onInputChange(e, 'name')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.name })} /> */}
-
-                                        {submitted && !product.name && <small className="p-invalid">Name is required.</small>}
-                                    </div>
-                                    <div className="field col-6 ">
-                                        <label htmlFor="name">Department</label>
-                                        <MultiSelect value={null} options={null} optionLabel="name" display="chip"
-                                            placeholder="Select Depatment" maxSelectedLabels={3} className="w-full " />
-                                        {submitted && !product.name && <small className="p-invalid">Name is required.</small>}
-                                    </div>
-                                </div>
-
-
-                                <h4 className='col-12'>Roles</h4>
-
-                                <div className="field col-6 ">
-                                    <label>User's roles</label>
-                                    <MultiSelect value={null}  options={null} optionLabel="name" display="chip"
-                                        placeholder="Select Roles" maxSelectedLabels={3} className="w-full md:w-20rem mb-2" />
-                                        <small className=' text-color-secondary'>User can have one or more roles</small>
-                                </div>
-
-                            </div>
+                            {addUserCode()}
                         </Dialog>
 
                         <Dialog visible={deleteProductDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteProductDialogFooter} onHide={hideDeleteProductDialog}>
@@ -472,4 +495,4 @@ const Crud = () => {
     );
 };
 
-export default Crud;
+export default User;

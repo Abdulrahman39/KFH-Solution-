@@ -1,6 +1,7 @@
 import instance from "./instance";
 import {makeObservable, observable} from "mobx";
 import {console} from "next/dist/compiled/@edge-runtime/primitives/console";
+import FormData from 'form-data';
 
 class ProjectsStore {
     projectsLoaded = false;

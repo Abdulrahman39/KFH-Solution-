@@ -21,7 +21,7 @@ import { Menu } from 'primereact/menu';
 import { useRouter } from 'next/router';
 
 
-const Crud = () => {
+const AdminProjects = () => {
     let emptyProduct = {
         id: null,
         name: '',
@@ -33,6 +33,18 @@ const Crud = () => {
         rating: 0,
         inventoryStatus: 'INSTOCK'
     };
+    const representatives = [
+        { name: 'Amy Elsner', image: 'amyelsner.png' },
+        { name: 'Anna Fali', image: 'annafali.png' },
+        { name: 'Asiya Javayant', image: 'asiyajavayant.png' },
+        { name: 'Bernardo Dominic', image: 'bernardodominic.png' },
+        { name: 'Elwin Sharvill', image: 'elwinsharvill.png' },
+        { name: 'Ioni Bowcher', image: 'ionibowcher.png' },
+        { name: 'Ivan Magalhaes', image: 'ivanmagalhaes.png' },
+        { name: 'Onyama Limba', image: 'onyamalimba.png' },
+        { name: 'Stephen Shaw', image: 'stephenshaw.png' },
+        { name: 'XuXue Feng', image: 'xuxuefeng.png' }
+    ];
 
     const [products, setProducts] = useState(null);
     const [productDialog, setProductDialog] = useState(false);
@@ -158,13 +170,13 @@ const Crud = () => {
         setProduct(_product);
     };
 
-    const onInputChange = (e, name) => {
-        const val = (e.target && e.target.value) || '';
-        let _product = { ...product };
-        _product[`${name}`] = val;
+    // const onInputChange = (e, name) => {
+    //     const val = (e.target && e.target.value) || '';
+    //     let _product = { ...product };
+    //     _product[`${name}`] = val;
 
-        setProduct(_product);
-    };
+    //     setProduct(_product);
+    // };
 
     const onInputNumberChange = (e, name) => {
         const val = e.value || 0;
@@ -300,6 +312,46 @@ const Crud = () => {
     );
     const router = useRouter();
 
+    const onInputChange = (e, name) => {
+        const val = (e.target && e.target.value) || '';
+        let _project = { ...project };
+        _project[`${name}`] = val;
+
+        setProject(_project);
+    };
+    const emptyproject = {
+        name: '',
+        description: '',
+        members: []
+    }
+    const [project, setProject] = useState(emptyproject)
+
+    const addProjectCode = () => {
+        return (
+            <div className='col'>
+                <div className="field mt-2 lg:col-6">
+                    <label htmlFor="name">Project Name</label>
+                    <InputText id="name" value={project.name} onChange={(e) => onInputChange(e, 'name')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.name })} />
+                    {submitted && !project.name && <small className="p-invalid text-red-500">Name is required.</small>}
+                </div>
+                <div className="field lg:col-6">
+                    <label htmlFor="description">Description</label>
+                    <InputTextarea id="description" value={project.description} onChange={(e) => onInputChange(e, 'description')} required rows={3} cols={20} className={classNames({ 'p-invalid': submitted && !project.description })} />
+                    {submitted && !project.description && <small className="p-invalid text-red-500">Description is required.</small>}
+
+                </div>
+
+                <div className="field lg:col-6">
+                    <MultiSelect value={project.members} onChange={(e) => onInputChange(e, 'members')} options={representatives} optionLabel="name" display="chip"
+                        placeholder="Select Members" maxSelectedLabels={3} className={classNames({ 'p-invalid': submitted && !project.members.length != 0 })} />
+                    {submitted && !project.members.length != 0 && <small className="p-invalid text-red-500">Select at least one member.</small>}
+
+                </div>
+            </div>
+
+        )
+    }
+
     let items = [
         {
             label: 'Projects', icon: 'pi pi-fw  pi-file', className: 'bg-green-100 text-center'
@@ -309,8 +361,11 @@ const Crud = () => {
                 router.push('/admin-panel/releases')
             }
         },
-        { label: 'users', icon: 'pi pi-fw pi-user',command: () => {
-            router.push('/admin-panel/user')} },
+        {
+            label: 'users', icon: 'pi pi-fw pi-user', command: () => {
+                router.push('/admin-panel/user')
+            }
+        },
     ]
     return (
         <div className=''>
@@ -325,9 +380,9 @@ const Crud = () => {
                         <Menu className='w-full justify-content-center ' style={{ background: 'transparent', border: 0 }} model={items}></Menu>
                     </div>
 
-                
+
                 </div>
-                <Divider layout='vertical' className='hidden lg:block'/>
+                <Divider layout='vertical' className='hidden lg:block' />
 
                 <div className="col">
                     <div className='flex justify-content-between'>
@@ -370,22 +425,7 @@ const Crud = () => {
                         </DataTable>
 
                         <Dialog visible={productDialog} style={{ width: '750px' }} header="Add new project" modal className="p-fluid" footer={productDialogFooter} onHide={hideDialog}>
-                            {product.image && <img src={`/demo/images/product/${product.image}`} alt={product.image} width="150" className="mt-0 mx-auto mb-5 block shadow-2" />}
-                            <div className="field mt-2 lg:col-6">
-                                <label htmlFor="name">Project Name</label>
-                                <InputText id="name" value={product.name} onChange={(e) => onInputChange(e, 'name')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.name })} />
-                                {submitted && !product.name && <small className="p-invalid">Name is required.</small>}
-                            </div>
-                            <div className="field lg:col-6">
-                                <label htmlFor="description">Description</label>
-                                <InputTextarea id="description" value={product.description} onChange={(e) => onInputChange(e, 'description')} required rows={3} cols={20} />
-                            </div>
-
-                            <div className="field lg:col-6">
-                                <MultiSelect value={null} options={null} optionLabel="name" display="chip"
-                                    placeholder="Select Members" maxSelectedLabels={3} className="w-full " />
-                            </div>
-
+                            {addProjectCode()}
 
                         </Dialog>
 
@@ -413,4 +453,4 @@ const Crud = () => {
     );
 };
 
-export default Crud;
+export default AdminProjects;

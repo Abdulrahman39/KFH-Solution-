@@ -19,18 +19,19 @@ import { Divider } from 'primereact/divider';
 import { Menu } from 'primereact/menu';
 import { InputText } from 'primereact/inputtext';
 import { useRouter } from "next/router";
+import { Toast } from 'primereact/toast';
 
-const TableDemo = () => {
+
+const Releases = () => {
+    const toast = useRef(null);
+
     const [customers1, setCustomers1] = useState(null);
-    const [customers2, setCustomers2] = useState([]);
     const [customers3, setCustomers3] = useState([]);
     const [filters1, setFilters1] = useState(null);
     const [loading1, setLoading1] = useState(true);
-    const [loading2, setLoading2] = useState(true);
-    const [idFrozen, setIdFrozen] = useState(false);
+
     const [products, setProducts] = useState([]);
     const [globalFilterValue1, setGlobalFilterValue1] = useState('');
-    const [expandedRows, setExpandedRows] = useState(null);
     const [allExpanded, setAllExpanded] = useState(false);
 
     const representatives = [
@@ -74,15 +75,13 @@ const TableDemo = () => {
     };
 
     useEffect(() => {
-        setLoading2(true);
 
         CustomerService.getCustomersLarge().then((data) => {
             setCustomers1(getCustomers(data));
             setLoading1(false);
         });
         CustomerService.getCustomersLarge().then((data) => {
-            setCustomers2(getCustomers(data));
-            setLoading2(false);
+     
         });
         CustomerService.getCustomersMedium().then((data) => setCustomers3(data));
         ProductService.getProductsWithOrdersSmall().then((data) => setProducts(data));
@@ -90,13 +89,7 @@ const TableDemo = () => {
         initFilters1();
     }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-    const balanceTemplate = (rowData) => {
-        return (
-            <div>
-                <span className="text-bold">{formatCurrency(rowData.balance)}</span>
-            </div>
-        );
-    };
+  
 
     const getCustomers = (data) => {
         return [...(data || [])].map((d) => {
@@ -132,22 +125,11 @@ const TableDemo = () => {
         setGlobalFilterValue1('');
     };
 
-    const countryBodyTemplate = (rowData) => {
-        return (
-            <React.Fragment>
-                <img alt="flag" src={`/demo/images/flag/flag_placeholder.png`} className={`flag flag-${rowData.country.code}`} width={30} />
-                <span style={{ marginLeft: '.5em', verticalAlign: 'middle' }}>{rowData.country.name}</span>
-            </React.Fragment>
-        );
-    };
+ 
 
-    const filterClearTemplate = (options) => {
-        return <Button type="button" icon="pi pi-times" onClick={options.filterClearCallback} severity="secondary"></Button>;
-    };
 
-    const filterApplyTemplate = (options) => {
-        return <Button type="button" icon="pi pi-check" onClick={options.filterApplyCallback} severity="success"></Button>;
-    };
+
+  
 
     const representativeBodyTemplate = (rowData) => {
         const representative = rowData.representative;
@@ -199,9 +181,7 @@ const TableDemo = () => {
         return <span style={{ marginLeft: '.5em', verticalAlign: 'middle' }}>172.17.123.248 - No root detecting & no ssl pinning </span>
     };
 
-    const balanceFilterTemplate = (options) => {
-        return <InputNumber value={options.value} onChange={(e) => options.filterCallback(e.value, options.index)} mode="currency" currency="USD" locale="en-US" />;
-    };
+
 
     const statusBodyTemplate = (rowData) => {
         let statuses = ["uploaded", "under testing", "done"];
@@ -221,29 +201,40 @@ const TableDemo = () => {
         return <ProgressBar value={rowData.activity} showValue={false} style={{ height: '.5rem' }}></ProgressBar>;
     };
 
-    const activityFilterTemplate = (options) => {
-        return (
-            <React.Fragment>
-                <Slider value={options.value} onChange={(e) => options.filterCallback(e.value)} range className="m-3"></Slider>
-                <div className="flex align-items-center justify-content-between px-2">
-                    <span>{options.value ? options.value[0] : 0}</span>
-                    <span>{options.value ? options.value[1] : 100}</span>
-                </div>
-            </React.Fragment>
-        );
-    };
+    // const activityFilterTemplate = (options) => {
+    //     return (
+    //         <React.Fragment>
+    //             <Slider value={options.value} onChange={(e) => options.filterCallback(e.value)} range className="m-3"></Slider>
+    //             <div className="flex align-items-center justify-content-between px-2">
+    //                 <span>{options.value ? options.value[0] : 0}</span>
+    //                 <span>{options.value ? options.value[1] : 100}</span>
+    //             </div>
+    //         </React.Fragment>
+    //     );
+    // };
 
     const handleDownload = () => {
         console.log(navigator.userAgent);
 
-        if (navigator.userAgent.indexOf("Mac") !== -1)
-            alert("OS: macOS");
-        else if (navigator.userAgent.indexOf("Windows") !== -1)
+        if (navigator.userAgent.indexOf("Mac") !== -1) {
+            alert("OS: ");
+            toast.current.show({ severity: 'info', summary: 'OS', detail: 'macOS', life: 3000 });
+        }
+        else if (navigator.userAgent.indexOf("Windows") !== -1) {
             alert("OS: Windows");
-        else if (navigator.userAgent.indexOf("iPhone") !== -1 || navigator.userAgent.indexOf("iPad") !== -1 || navigator.userAgent.indexOf("iPod") !== -1)
+            toast.current.show({ severity: 'info', summary: 'OS', detail: 'Windows', life: 3000 });
+
+        }
+        else if (navigator.userAgent.indexOf("iPhone") !== -1 || navigator.userAgent.indexOf("iPad") !== -1 || navigator.userAgent.indexOf("iPod") !== -1) {
             alert("OS: iOS");
-        else if (navigator.userAgent.indexOf("Android") !== -1)
+            toast.current.show({ severity: 'info', summary: 'OS', detail: 'ios', life: 3000 });
+
+        }
+        else if (navigator.userAgent.indexOf("Android") !== -1) {
             alert("OS: Android");
+            toast.current.show({ severity: 'info', summary: 'OS', detail: 'Andriod', life: 3000 });
+
+        }
     };
 
     const verifiedBodyTemplate = (rowData) => {
@@ -327,16 +318,7 @@ const TableDemo = () => {
         );
     };
 
-    const footerTemplate = (data) => {
-        return (
-            <React.Fragment>
-                <td colSpan="4" style={{ textAlign: 'right' }} className="text-bold pr-6">
-                    Total Customers
-                </td>
-                <td>{calculateCustomerTotal(data.representative.name)}</td>
-            </React.Fragment>
-        );
-    };
+
 
     const calculateCustomerTotal = (name) => {
         let total = 0;
@@ -379,70 +361,72 @@ const TableDemo = () => {
 
     return (
         <div>
+            <Toast ref={toast} />
+
             <h1 className='card text-center shadow-1'>Admin Panel</h1>
             <div className="grid  mt-5 ">
-            <div className='m-5 w-full  lg:w-17rem'>
+                <div className='m-5 w-full  lg:w-17rem'>
                     <p className='text-center text-xl col-12'>Administration panel</p>
 
                     <div className='col-12 flex justify-content-center align-content-center text-center w-full'>
                         <Menu className='w-full justify-content-center ' style={{ background: 'transparent', border: 0 }} model={items}></Menu>
                     </div>
 
-                
+
                 </div>
-                <Divider layout='vertical' className='hidden lg:block'/>
+                <Divider layout='vertical' className='hidden lg:block' />
 
-                    <div className="col">
+                <div className="col">
 
-                        <React.Fragment>
-                            <div style={{ display: "flex", }} className="mb-5 flex justify-content-between">
-                                <div>
-                                    <h2>Releases</h2>
-                                    <p>Create, edit and manage releases</p>
-                                </div>
-                                <Button icon="pi pi-cloud-upload text-2xl" label='Create Release' className='h-3rem mt-3' severity="sucess" onClick={handleUploadRelease} />
+                    <React.Fragment>
+                        <div style={{ display: "flex", }} className="mb-5 flex justify-content-between">
+                            <div>
+                                <h2>Releases</h2>
+                                <p>Create, edit and manage releases</p>
                             </div>
-                        </React.Fragment>
-                        <div className="card">
-
-                            <DataTable
-                                value={customers1}
-                                paginator
-                                className="p-datatable-gridlines lg:w-full md:w-full w-19rem"                          
-
-                                showGridlines
-                                rows={10}
-                                dataKey="id"
-                                filters={filters1}
-                                filterDisplay="menu"
-                                loading={loading1}
-                                responsiveLayout="scroll"
-                                header={header1}
-                            >
-                                <Column
-                                    header="Developer"
-                                    filterField="representative"
-                                    showFilterMatchModes={false}
-                                    filterMenuStyle={{ width: '14rem' }}
-                                    style={{ minWidth: '14rem' }}
-                                    body={representativeBodyTemplate}
-                                    filter
-                                    filterElement={representativeFilterTemplate}
-                                />
-                                <Column header="Date" filterField="date" dataType="date" style={{ minWidth: '10rem' }} body={dateBodyTemplate} filter filterElement={dateFilterTemplate} />
-                                <Column header="Description" style={{ minWidth: '10rem' }} body={descriptionBodyTemplate} />
-                                <Column header="SIT Server" style={{ minWidth: '10rem' }} body={sitBodyTemplate} />
-                                <Column field="Status" header="Status" filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '12rem' }} body={statusBodyTemplate} />
-                                <Column field="Download" header="Download" bodyClassName="text-center" style={{ minWidth: '8rem' }} body={verifiedBodyTemplate} />
-                            </DataTable>
+                            <Button icon="pi pi-cloud-upload text-2xl" label='Create Release' className='h-3rem mt-3' severity="sucess" onClick={handleUploadRelease} />
                         </div>
+                    </React.Fragment>
+                    <div className="card">
+
+                        <DataTable
+                            value={customers1}
+                            paginator
+                            className="p-datatable-gridlines lg:w-full md:w-full w-19rem"
+
+                            showGridlines
+                            rows={10}
+                            dataKey="id"
+                            filters={filters1}
+                            filterDisplay="menu"
+                            loading={loading1}
+                            responsiveLayout="scroll"
+                            header={header1}
+                        >
+                            <Column
+                                header="Developer"
+                                filterField="representative"
+                                showFilterMatchModes={false}
+                                filterMenuStyle={{ width: '14rem' }}
+                                style={{ minWidth: '14rem' }}
+                                body={representativeBodyTemplate}
+                                filter
+                                filterElement={representativeFilterTemplate}
+                            />
+                            <Column header="Date" filterField="date" dataType="date" style={{ minWidth: '10rem' }} body={dateBodyTemplate} filter filterElement={dateFilterTemplate} />
+                            <Column header="Description" style={{ minWidth: '10rem' }} body={descriptionBodyTemplate} />
+                            <Column header="SIT Server" style={{ minWidth: '10rem' }} body={sitBodyTemplate} />
+                            <Column field="Status" header="Status" filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '12rem' }} body={statusBodyTemplate} />
+                            <Column field="Download" header="Download" bodyClassName="text-center" style={{ minWidth: '8rem' }} body={verifiedBodyTemplate} />
+                        </DataTable>
                     </div>
+                </div>
 
 
-               
+
             </div>
         </div>
     );
 };
 
-export default TableDemo;
+export default Releases;
