@@ -15,6 +15,7 @@ import { ToggleButton } from 'primereact/togglebutton';
 import { Rating } from 'primereact/rating';
 import { CustomerService } from '../../demo/service/CustomerService';
 import { ProductService } from '../../demo/service/ProductService';
+import projectsStore from "../../stores/projectsStore";
 
 import { InputText } from 'primereact/inputtext';
 import {useRouter} from "next/router";
@@ -71,9 +72,13 @@ const TableDemo = () => {
             </div>
         );
     };
+    const [releaseInfo,setReleaseInfo]= useState(null)
 
     useEffect(() => {
         setLoading2(true);
+         function releases(){
+             setReleaseInfo(projectsStore.currentProject)
+        }
 
         CustomerService.getCustomersLarge().then((data) => {
             setCustomers1(getCustomers(data));
@@ -370,7 +375,7 @@ const TableDemo = () => {
                         </div>
                     </React.Fragment>
                     <DataTable
-                        value={customers1}
+                        value={releaseInfo}
                         paginator
                         className="p-datatable-gridlines"
                         showGridlines

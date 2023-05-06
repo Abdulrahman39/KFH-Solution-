@@ -9,7 +9,7 @@ const ProjectCard = props => {
     const handleContinue = async () => {
         projectsStore.currentProject = { ...props };
         await projectsStore.getRelease(props.id)
-        router.push(`/releasTry/${props.id}`);
+        router.push(`/releases/${props.id}`);
     };
     const date = new Date(props.created_at)
 
