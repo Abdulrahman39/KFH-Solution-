@@ -21,7 +21,7 @@ import { MultiSelect } from 'primereact/multiselect';
 import { Menu } from 'primereact/menu';
 import { useRouter } from 'next/router';
 import newProjectsStore from '../../../stores/projectsStore';
-
+import ProjectsStore from '../../../stores/projectsStore';
 
 const User = () => {
     let emptyProduct = {
@@ -46,9 +46,20 @@ const User = () => {
     const [globalFilter, setGlobalFilter] = useState(null);
     const toast = useRef(null);
     const dt = useRef(null);
-
+    const [loading1, setLoading1] = useState(true);
+    const [usersInfo, setUsersInfo] = useState(null)
     useEffect(() => {
         ProductService.getProducts().then((data) => setProducts(data));
+        async function ListUsers() {
+            await ProjectsStore.getUsers().then((res) => {
+                setUsersInfo(res);
+                setLoading1(false)
+            })
+        }
+        ListUsers();
+
+
+
     }, []);
 
     const formatCurrency = (value) => {
@@ -77,7 +88,7 @@ const User = () => {
 
     const saveProduct = () => {
         setSubmitted(true);
-        
+
         if (product.name.trim()) {
 
             let _products = [...products];
@@ -200,23 +211,24 @@ const User = () => {
         return (
             <>
                 <span className="p-column-title">Name</span>
-                {rowData.name}
+                {rowData.firstName+" "+rowData.lastName}
             </>
         );
     };
     const UsernameBodyTemplate = (rowData) => {
         return (
             <>
-                <span className="p-column-title">Name</span>
-                {rowData.name}
+                <span className="p-column-title">Username</span>
+
+                {rowData.username}
             </>
         );
     }
     const RolesBodyTemplate = (rowData) => {
         return (
             <>
-                <span className="p-column-title">Name</span>
-                {rowData.name}
+                <span className="p-column-title">Role</span>
+                {rowData.type}
             </>
         );
     }
@@ -225,16 +237,16 @@ const User = () => {
         return (
             <>
                 <span className="p-column-title">Name</span>
-                {rowData.name}
+                {rowData.email}
             </>
         );
     };
 
-    const imageBodyTemplate = (rowData) => {
+    const DepartmentBodyTemplate = (rowData) => {
         return (
             <>
                 <span className="p-column-title">Image</span>
-                <img src={`/demo/images/product/${rowData.image}`} alt={rowData.image} className="shadow-2" width="100" />
+                {rowData.department}
             </>
         );
     };
@@ -374,8 +386,8 @@ const User = () => {
                     <div className="field col-6 ">
                         <label htmlFor="department">Department</label>
                         <Dropdown value={user.department} onChange={(e) => onInputChange(e, 'department')} options={departments} optionLabel="name"
-                            placeholder="Select Department" className={classNames({ 'p-invalid': submitted && user.department.length==0 })} />
-                        {submitted && user.department.length==0 && <small className="p-invalid text-red-500">Department is required.</small>}
+                            placeholder="Select Department" className={classNames({ 'p-invalid': submitted && user.department.length == 0 })} />
+                        {submitted && user.department.length == 0 && <small className="p-invalid text-red-500">Department is required.</small>}
                     </div>
 
                 </div>
@@ -385,9 +397,9 @@ const User = () => {
                 <div className="field col-6 ">
                     <label>User's roles</label>
                     <MultiSelect value={user.roles} options={Roles} optionLabel="name" display="chip" onChange={(e) => onInputChange(e, 'roles')}
-                        placeholder="Select Roles" className={classNames({ 'p-invalid': submitted && user.roles.length==0 })} />
+                        placeholder="Select Roles" className={classNames({ 'p-invalid': submitted && user.roles.length == 0 })} />
                     {!submitted && <small className=' text-color-secondary'>User can have one or more roles</small>}
-                    {submitted && user.roles.length==0 && <small className="p-invalid text-red-500">Select at least one role.</small>}
+                    {submitted && user.roles.length == 0 && <small className="p-invalid text-red-500">Select at least one role.</small>}
 
                 </div>
 
@@ -436,32 +448,30 @@ const User = () => {
 
                         <Toast ref={toast} />
 
-
                         <DataTable
-                            ref={dt}
-                            value={products}
-                            selection={selectedProducts}
-                            onSelectionChange={(e) => setSelectedProducts(e.value)}
+                            value={ProjectsStore.users}
                             dataKey="id"
                             paginator
                             rows={10}
                             rowsPerPageOptions={[5, 10, 25]}
                             className="datatable-responsive lg:w-full md:w-full w-19rem"
                             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-                            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products"
+                            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} users"
                             globalFilter={globalFilter}
-                            emptyMessage="No products found."
+                            loading={loading1}
+
+                            emptyMessage="No users found."
                             header={header}
                             responsiveLayout="scroll"
                         >
-                            <Column selectionMode="multiple" headerStyle={{ width: '4rem' }}></Column>
-                            <Column field="name" header="Name" sortable body={nameBodyTemplate}></Column>
-                            <Column field="email" header="Email Address" sortable body={EmailBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
-                            <Column field="roles" header="Roles" body={RolesBodyTemplate} headerStyle={{ minWidth: '10rem' }} sortable></Column>
+                            {/* <Column selectionMode="multiple" headerStyle={{ width: '4rem' }}></Column> */}
+                            <Column header="Name" sortable body={nameBodyTemplate}></Column>
+                            <Column header="Email Address" sortable body={EmailBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
+                            <Column header="Roles" body={RolesBodyTemplate} headerStyle={{ minWidth: '10rem' }} sortable></Column>
 
-                            <Column field="username" header="Username" body={UsernameBodyTemplate} sortable></Column>
+                            <Column header="Username" body={UsernameBodyTemplate} sortable></Column>
 
-                            <Column field="Department" header="Department" body={imageBodyTemplate} sortable headerStyle={{ minWidth: '10rem' }}></Column>
+                            <Column header="Department" body={DepartmentBodyTemplate} sortable headerStyle={{ minWidth: '10rem' }}></Column>
                             <Column body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
                         </DataTable>
 

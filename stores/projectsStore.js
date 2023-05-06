@@ -1,11 +1,12 @@
 import instance from "./instance";
-import {makeObservable, observable} from "mobx";
-import {console} from "next/dist/compiled/@edge-runtime/primitives/console";
+import { makeObservable, observable } from "mobx";
+import { console } from "next/dist/compiled/@edge-runtime/primitives/console";
 import FormData from 'form-data';
 
 class ProjectsStore {
     projectsLoaded = false;
     projects = [];
+    users = []
     currentProject = null;
     formData = new FormData();
 
@@ -30,6 +31,26 @@ class ProjectsStore {
             console.error(error);
         }
     };
+
+    getUsers = async () => {
+        try {
+            const res = await instance.get("user/");
+            // console.log(res);
+            this.users = res
+            return res;
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    createUser = async (data) => {
+        try {
+            const res = await instance.post("user/", data);
+            console.log(res);
+        } catch (error) {
+            console.error(error);
+        }
+    }
 
     addReleases = async () => {
         for (let i = 0; i < this.projects.length; i++) {
