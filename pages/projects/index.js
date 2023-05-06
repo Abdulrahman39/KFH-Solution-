@@ -18,14 +18,22 @@ import { ProgressSpinner } from 'primereact/progressspinner';
 
 const Dashboard = () => {
     const [globalSearch, setGlobalSearch] = useState('')
-    const projectsCards = projectsStore.projects.map(p => (<ProjectCard key={p.name} {...p} />));
+    let projectsCards = projectsStore.projects.map(p => (<ProjectCard key={p.name} {...p} />));
 
 
 
 
 
     useEffect(() => {
+
+        async function projects() {
+            await projectsStore.getProject()
+            projectsCards = projectsStore.projects.map(p => (<ProjectCard key={p.name} {...p} />));
+
+        }
+        projects()
     }, []);
+
 
 
 

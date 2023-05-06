@@ -308,7 +308,7 @@ const TableDemo = () => {
                     <Column field="customer" header="Customer" sortable></Column>
                     <Column field="date" header="Date" sortable></Column>
                     <Column field="amount" header="Amount" body={amountBodyTemplate} sortable></Column>
-                    <Column field="status" header="Status" body={statusOrderBodyTemplate} sortable></Column>
+                    {/* <Column field="status" header="Status" body={statusOrderBodyTemplate} sortable></Column> */}
                     <Column headerStyle={{ width: '4rem' }} body={searchBodyTemplate}></Column>
                 </DataTable>
             </div>

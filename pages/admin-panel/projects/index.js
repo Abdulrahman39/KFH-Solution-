@@ -74,6 +74,7 @@ const AdminProjects = () => {
     const hideDialog = () => {
         setSubmitted(false);
         setProductDialog(false);
+        setProject(emptyproject)
     };
 
     const hideDeleteProductDialog = () => {
@@ -152,9 +153,6 @@ const AdminProjects = () => {
         dt.current.exportCSV();
     };
 
-    const confirmDeleteSelected = () => {
-        setDeleteProductsDialog(true);
-    };
 
     const deleteSelectedProducts = () => {
         let _products = products.filter((val) => !selectedProducts.includes(val));
@@ -293,10 +291,10 @@ const AdminProjects = () => {
     );
 
     const productDialogFooter = (
-        <>
+        <div className='flex justify-content-between'>
             <Button label="Cancel" icon="pi pi-times" text onClick={hideDialog} />
             <Button label="Save" icon="pi pi-check" text onClick={saveProduct} />
-        </>
+        </div>
     );
     const deleteProductDialogFooter = (
         <>
@@ -331,7 +329,7 @@ const AdminProjects = () => {
             <div className='col'>
                 <div className="field mt-2 lg:col-6">
                     <label htmlFor="name">Project Name</label>
-                    <InputText id="name" value={project.name} onChange={(e) => onInputChange(e, 'name')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.name })} />
+                    <InputText id="name" value={project.name} onChange={(e) => onInputChange(e, 'name')} required autoFocus className={classNames({ 'p-invalid': submitted && !project.name })} />
                     {submitted && !project.name && <small className="p-invalid text-red-500">Name is required.</small>}
                 </div>
                 <div className="field lg:col-6">
@@ -414,12 +412,8 @@ const AdminProjects = () => {
                             responsiveLayout="scroll"
                         >
                             <Column selectionMode="multiple" headerStyle={{ width: '4rem' }}></Column>
-                            {/* <Column field="code" header="Code" sortable body={codeBodyTemplate} headerStyle={{ minWidth: '15rem' }}></Column> */}
                             <Column field="name" header="Name" sortable body={nameBodyTemplate} headerStyle={{ minWidth: '15rem' }}></Column>
-                            {/* <Column header="Image" body={imageBodyTemplate}></Column> */}
                             <Column field="price" header="Description" body={priceBodyTemplate} sortable></Column>
-                            {/* <Column field="category" header="Category" sortable body={categoryBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column> */}
-                            {/* <Column field="rating" header="Reviews" body={ratingBodyTemplate} sortable></Column> */}
                             <Column field="inventoryStatus" header="Members" body={statusBodyTemplate} sortable headerStyle={{ minWidth: '10rem' }}></Column>
                             <Column body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
                         </DataTable>
