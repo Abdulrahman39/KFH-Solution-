@@ -2,25 +2,15 @@ import { Button } from 'primereact/button';
 import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
 import { Dialog } from 'primereact/dialog';
-import { FileUpload } from 'primereact/fileupload';
-import { InputNumber } from 'primereact/inputnumber';
 import { InputText } from 'primereact/inputtext';
-import { InputTextarea } from 'primereact/inputtextarea';
-import { RadioButton } from 'primereact/radiobutton';
-import { Rating } from 'primereact/rating';
 import { Toast } from 'primereact/toast';
 import { Dropdown } from 'primereact/dropdown'
-import { Toolbar } from 'primereact/toolbar';
 import { classNames } from 'primereact/utils';
 import React, { useEffect, useRef, useState } from 'react';
-import { ProductService } from '../../../demo/service/ProductService';
 import { Divider } from 'primereact/divider';
-import { Avatar } from 'primereact/avatar';
-import { AvatarGroup } from 'primereact/avatargroup';
 import { MultiSelect } from 'primereact/multiselect';
 import { Menu } from 'primereact/menu';
 import { useRouter } from 'next/router';
-import newProjectsStore from '../../../stores/projectsStore';
 import ProjectsStore from '../../../stores/projectsStore';
 
 const User = () => {
@@ -48,8 +38,19 @@ const User = () => {
     const dt = useRef(null);
     const [loading1, setLoading1] = useState(true);
     const [usersInfo, setUsersInfo] = useState(null)
+
+    const emptyuser = {
+        firstname: '',
+        lastname: '',
+        email: '',
+        department: [],
+        type: [],
+    }
+    const [user, setUser] = useState(emptyuser)
+    const Roles = [{ name: 'Developer',code:1 }, { name: 'Admin', code:0  }, { name: 'Tester',code:2 }]
+    const departments = [{ name: 'IT' }, { name: 'HR' }, { name: 'PR' }]
+
     useEffect(() => {
-        ProductService.getProducts().then((data) => setProducts(data));
         async function ListUsers() {
             await ProjectsStore.getUsers().then((res) => {
                 setUsersInfo(res);
@@ -62,12 +63,10 @@ const User = () => {
 
     }, []);
 
-    const formatCurrency = (value) => {
-        return value.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
-    };
+
 
     const openNew = () => {
-        setProduct(emptyProduct);
+        setUser(emptyuser);
         setSubmitted(false);
         setProductDialog(true);
     };
@@ -86,30 +85,27 @@ const User = () => {
         setDeleteProductsDialog(false);
     };
 
-    const saveProduct = () => {
+    const checkUserInfo = () => {
+        if (user.firstname == '' || user.email == '' || user.department.length == 0 || user.type.length == 0)
+            return false;
+        else return true
+    }
+    const CreateUser = async () => {
         setSubmitted(true);
+        if (checkUserInfo()) {
+            let data = user;
+            data.department = data.department.name
+            let arr = []
 
-        if (product.name.trim()) {
-
-            let _products = [...products];
-            let _product = { ...product };
-            if (product.id) {
-                const index = findIndexById(product.id);
-
-                _products[index] = _product;
-                toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Product Updated', life: 3000 });
-            } else {
-                _product.id = createId();
-                _product.code = createId();
-                _product.image = 'product-placeholder.svg';
-                _products.push(_product);
-                toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Product Created', life: 3000 });
+            for (const key in data.type) {
+                arr.push(data.type[key].name)
             }
-
-            setProducts(_products);
-            setProductDialog(false);
-            setProduct(emptyProduct);
+            data.type = arr
+            await ProjectsStore.createUser({ ...data }).then(() => {
+                toast.current.show({ severity: 'success', summary: 'Successful', detail: `'User Created'`, life: 3000 });
+            })
         }
+
     };
 
     const editProduct = (product) => {
@@ -130,26 +126,9 @@ const User = () => {
         toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Product Deleted', life: 3000 });
     };
 
-    const findIndexById = (id) => {
-        let index = -1;
-        for (let i = 0; i < products.length; i++) {
-            if (products[i].id === id) {
-                index = i;
-                break;
-            }
-        }
 
-        return index;
-    };
 
-    const createId = () => {
-        let id = '';
-        let chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-        for (let i = 0; i < 5; i++) {
-            id += chars.charAt(Math.floor(Math.random() * chars.length));
-        }
-        return id;
-    };
+
 
     const exportCSV = () => {
         dt.current.exportCSV();
@@ -189,29 +168,14 @@ const User = () => {
         );
     };
 
-    const rightToolbarTemplate = () => {
-        return (
-            <React.Fragment>
-                <FileUpload mode="basic" accept="image/*" maxFileSize={1000000} label="Import" chooseLabel="Import" className="mr-2 inline-block" />
-                <Button label="Export" icon="pi pi-upload" severity="help" onClick={exportCSV} />
-            </React.Fragment>
-        );
-    };
 
-    const codeBodyTemplate = (rowData) => {
-        return (
-            <>
-                <span className="p-column-title">Code</span>
-                {rowData.code}
-            </>
-        );
-    };
+
 
     const nameBodyTemplate = (rowData) => {
         return (
             <>
                 <span className="p-column-title">Name</span>
-                {rowData.firstName+" "+rowData.lastName}
+                {rowData.firstName + " " + rowData.lastName}
             </>
         );
     };
@@ -245,58 +209,24 @@ const User = () => {
     const DepartmentBodyTemplate = (rowData) => {
         return (
             <>
-                <span className="p-column-title">Image</span>
+                <span className="p-column-title">Department</span>
                 {rowData.department}
             </>
         );
     };
 
-    const priceBodyTemplate = (rowData) => {
-        return (
-            <>
-                <p>description</p>
-            </>
-        );
-    };
 
-    const categoryBodyTemplate = (rowData) => {
-        return (
-            <>
-                <span className="p-column-title">Category</span>
-                {rowData.category}
-            </>
-        );
-    };
 
-    const ratingBodyTemplate = (rowData) => {
-        return (
-            <>
-                <span className="p-column-title">Reviews</span>
-                <Rating value={rowData.rating} readOnly cancel={false} />
-            </>
-        );
-    };
 
-    const statusBodyTemplate = (rowData) => {
-        return (
-            <>
-                <AvatarGroup>
-                    <Avatar image='/layout/images/KFHLOGO.png' shape='circle'></Avatar>
-                    <Avatar image='/layout/images/KFHLOGO.png' shape='circle'></Avatar>
-                    <Avatar image='/layout/images/KFHLOGO.png' shape='circle'></Avatar>
-                    <Avatar image='/layout/images/KFHLOGO.png' shape='circle'></Avatar>
-                    <Avatar label="+2" shape="circle" />
 
-                </AvatarGroup>
-            </>
-        );
-    };
+
+
 
     const actionBodyTemplate = (rowData) => {
         return (
             <>
                 <Button icon="pi pi-pencil" text raised severity="success" rounded className="mr-2" onClick={() => editProduct(rowData)} />
-                <Button icon="pi pi-trash" text raised severity="warning" rounded onClick={() => confirmDeleteProduct(rowData)} />
+                <Button icon="pi pi-trash" text raised severity="danger" rounded onClick={() => confirmDeleteProduct(rowData)} />
             </>
         );
     };
@@ -314,7 +244,7 @@ const User = () => {
     const productDialogFooter = (
         <div className='flex justify-content-between'>
             <Button label="Cancel" icon="pi pi-times" text onClick={hideDialog} />
-            <Button label="Save" icon="pi pi-check" text onClick={saveProduct} />
+            <Button label="Save" icon="pi pi-check" text onClick={CreateUser} />
         </div>
     );
     const deleteProductDialogFooter = (
@@ -333,24 +263,16 @@ const User = () => {
 
     // to set data to any feild 
     const onInputChange = (e, name) => {
-        const val = (e.target && e.target.value) || '';
+        let val = (e.target && e.target.value) || '';
         console.log(val)
         let _user = { ...user };
+
         _user[`${name}`] = val;
 
         setUser(_user);
     };
     // add user
-    const emptyuser = {
-        firstname: '',
-        lastname: '',
-        email: '',
-        department: [],
-        roles: [],
-    }
-    const [user, setUser] = useState(emptyuser)
-    const Roles = [{ name: 'Developer' }, { name: 'Admin' }, { name: 'Tester' }]
-    const departments = [{ name: 'IT' }, { name: 'HR' }, { name: 'PR' }]
+
     const addUserCode = () => {
         return (
             <div className='grid m-3'>
@@ -396,10 +318,10 @@ const User = () => {
                 <h4 className='col-12'>Roles</h4>
                 <div className="field col-6 ">
                     <label>User's roles</label>
-                    <MultiSelect value={user.roles} options={Roles} optionLabel="name" display="chip" onChange={(e) => onInputChange(e, 'roles')}
-                        placeholder="Select Roles" className={classNames({ 'p-invalid': submitted && user.roles.length == 0 })} />
+                    <MultiSelect value={user.type} options={Roles} optionLabel="name" display="chip" onChange={(e) => onInputChange(e, 'type')}
+                        placeholder="Select Roles" className={classNames({ 'p-invalid': submitted && user.type.length == 0 })} />
                     {!submitted && <small className=' text-color-secondary'>User can have one or more roles</small>}
-                    {submitted && user.roles.length == 0 && <small className="p-invalid text-red-500">Select at least one role.</small>}
+                    {submitted && user.type.length == 0 && <small className="p-invalid text-red-500">Select at least one role.</small>}
 
                 </div>
 
@@ -449,7 +371,7 @@ const User = () => {
                         <Toast ref={toast} />
 
                         <DataTable
-                            value={ProjectsStore.users}
+                            value={usersInfo}
                             dataKey="id"
                             paginator
                             rows={10}
@@ -495,7 +417,7 @@ const User = () => {
                         <Dialog visible={deleteProductsDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteProductsDialogFooter} onHide={hideDeleteProductsDialog}>
                             <div className="flex align-items-center justify-content-center">
                                 <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
-                                {product && <span>Are you sure you want to delete the selected products?</span>}
+                                {user && <span>Are you sure you want to delete the selected products?</span>}
                             </div>
                         </Dialog>
                     </div>

@@ -1,9 +1,9 @@
 import axios from "axios";
 
 const instance = axios.create({
-    baseURL: "https://d9f4-2a00-1851-8017-c8b1-4c0c-8e40-4ba-5468.ngrok-free.app/",
+    baseURL: "https://7ec0-2a00-1851-8017-c8b1-60d6-46ee-7ac5-56b2.ngrok-free.app/",
     headers: {
-        "mode": "no-cors",
+        "mode": "cors",
     },
 
 

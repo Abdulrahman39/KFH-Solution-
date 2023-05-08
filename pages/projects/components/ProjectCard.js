@@ -21,12 +21,12 @@ const ProjectCard = props => {
         <div className="flex flex-wrap justify-content-between gap-2">
             <Button label="Delete" icon="pi pi-times" className="p-button-outlined p-button-danger" />
 
-            <Button label="Releases" icon="pi pi-arrow-right" iconPos="right" onClick={handleContinue} />
+            <Button label="Releases" icon="pi pi-arrow-right" iconPos="right" className="p-button-outlined p-button-info" onClick={handleContinue} />
         </div>
     );
 
     return (
-        <div className=" col justify-content-center ">
+        <div className=" col justify-content-center " onClick={handleContinue}>
             <Card title={props.name} subTitle={date.toDateString()} footer={footer} header={header} className="md:w-25rem">
                 <div className="flex justify-content-center mb-2 mt-4">
 

@@ -43,9 +43,34 @@ class ProjectsStore {
         }
     }
 
+    deleteUser = async (userId) => {
+        try {
+            const res = await instance.delete(`user/${userId}`);
+            // console.log(res);
+            // this.users = res
+            return res;
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    editUser = async (userId, data) => {
+        try {
+            const res = await instance.put(`user/${userId}`, data, { 'Content-Type': 'application/json' });
+            // console.log(res);
+            // this.users = res
+            return res;
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+
     createUser = async (data) => {
         try {
-            const res = await instance.post("user/", data);
+            const res = await instance.post("user/", data, {
+                'Content-Type': 'application/json',
+            });
             console.log(res);
         } catch (error) {
             console.error(error);
