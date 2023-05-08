@@ -1,5 +1,6 @@
 import instance from "./instance";
 import projectsStore from "./projectsStore";
+import {toJS} from "mobx";
 
 class AuthStore {
     token = null;
@@ -12,6 +13,8 @@ class AuthStore {
             // alert("Login Successful!");
             await this.getUser(res.token);
             await projectsStore.getProject();
+            await projectsStore.getUsers();
+            console.log(toJS(projectsStore.users));
             console.log(this.user);
             return res.token;
         } catch (error) {

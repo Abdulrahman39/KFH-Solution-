@@ -19,6 +19,7 @@ import { AvatarGroup } from 'primereact/avatargroup';
 import { MultiSelect } from 'primereact/multiselect';
 import { Menu } from 'primereact/menu';
 import { useRouter } from 'next/router';
+import projectsStore from "../../../stores/projectsStore";
 
 
 const AdminProjects = () => {
@@ -57,6 +58,13 @@ const AdminProjects = () => {
     const toast = useRef(null);
     const dt = useRef(null);
 
+    const emptyproject = {
+        name: '',
+        description: '',
+        members: []
+    }
+    const [project, setProject] = useState(emptyproject)
+
     useEffect(() => {
         ProductService.getProducts().then((data) => setProducts(data));
     }, []);
@@ -85,29 +93,15 @@ const AdminProjects = () => {
         setDeleteProductsDialog(false);
     };
 
-    const saveProduct = () => {
-        setSubmitted(true);
+    const saveProduct = async () => {
+        const newPorject = {
+            name: project.name,
+            description: project.description,
+            participantsIds: project.members.map(m => m.id)
+        };
 
-        if (product.name.trim()) {
-            let _products = [...products];
-            let _product = { ...product };
-            if (product.id) {
-                const index = findIndexById(product.id);
-
-                _products[index] = _product;
-                toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Product Updated', life: 3000 });
-            } else {
-                _product.id = createId();
-                _product.code = createId();
-                _product.image = 'product-placeholder.svg';
-                _products.push(_product);
-                toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Product Created', life: 3000 });
-            }
-
-            setProducts(_products);
-            setProductDialog(false);
-            setProduct(emptyProduct);
-        }
+        await projectsStore.addProject(newPorject);
+        hideDialog();
     };
 
     const editProduct = (product) => {
@@ -230,10 +224,11 @@ const AdminProjects = () => {
         );
     };
 
-    const priceBodyTemplate = (rowData) => {
+    const descBodyTemplate = (rowData) => {
         return (
             <>
-                <p>description</p>
+                <span className="p-column-title">Name</span>
+                {rowData.description}
             </>
         );
     };
@@ -256,7 +251,7 @@ const AdminProjects = () => {
         );
     };
 
-    const statusBodyTemplate = (rowData) => {
+    const membersBodyTemplate = (rowData) => {
         return (
             <>
                 <AvatarGroup>
@@ -317,12 +312,6 @@ const AdminProjects = () => {
 
         setProject(_project);
     };
-    const emptyproject = {
-        name: '',
-        description: '',
-        members: []
-    }
-    const [project, setProject] = useState(emptyproject)
 
     const addProjectCode = () => {
         return (
@@ -340,8 +329,8 @@ const AdminProjects = () => {
                 </div>
 
                 <div className="field lg:col-6">
-                    <MultiSelect value={project.members} onChange={(e) => onInputChange(e, 'members')} options={representatives} optionLabel="name" display="chip"
-                        placeholder="Select Members" maxSelectedLabels={3} className={classNames({ 'p-invalid': submitted && !project.members.length != 0 })} />
+                    <MultiSelect value={project.members} onChange={(e) => onInputChange(e, 'members')} options={projectsStore.users} optionLabel="email" display="chip"
+                        placeholder="Select Members" className={classNames({ 'p-invalid': submitted && !project.members.length != 0 })} />
                     {submitted && !project.members.length != 0 && <small className="p-invalid text-red-500">Select at least one member.</small>}
 
                 </div>
@@ -353,11 +342,6 @@ const AdminProjects = () => {
     let items = [
         {
             label: 'Projects', icon: 'pi pi-fw  pi-file', className: 'bg-green-100 text-center'
-        },
-        {
-            label: 'Releases', icon: 'pi pi-fw pi-tags', command: () => {
-                router.push('/admin-panel/releases')
-            }
         },
         {
             label: 'users', icon: 'pi pi-fw pi-user', command: () => {
@@ -396,7 +380,7 @@ const AdminProjects = () => {
 
                         <DataTable
                             ref={dt}
-                            value={products}
+                            value={projectsStore.projects}
                             selection={selectedProducts}
                             onSelectionChange={(e) => setSelectedProducts(e.value)}
                             dataKey="id"
@@ -413,8 +397,8 @@ const AdminProjects = () => {
                         >
                             <Column selectionMode="multiple" headerStyle={{ width: '4rem' }}></Column>
                             <Column field="name" header="Name" sortable body={nameBodyTemplate} headerStyle={{ minWidth: '15rem' }}></Column>
-                            <Column field="price" header="Description" body={priceBodyTemplate} sortable></Column>
-                            <Column field="inventoryStatus" header="Members" body={statusBodyTemplate} sortable headerStyle={{ minWidth: '10rem' }}></Column>
+                            <Column field="description" header="Description" body={descBodyTemplate} sortable></Column>
+                            <Column field="members" header="Members" body={membersBodyTemplate} sortable headerStyle={{ minWidth: '10rem' }}></Column>
                             <Column body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
                         </DataTable>
 

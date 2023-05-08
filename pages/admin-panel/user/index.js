@@ -86,22 +86,23 @@ const User = () => {
     };
 
     const checkUserInfo = () => {
-        if (user.firstname == '' || user.email == '' || user.department.length == 0 || user.type.length == 0)
+        if (user.firstname === '' || user.email === '' || user.department.length === 0 || user.type.length === 0) {
+            console.log("FALSE!!!");
             return false;
-        else return true
+        }
+        else {
+            console.log("TRUUUUE!!!");
+            return true;
+        }
     }
     const CreateUser = async () => {
         setSubmitted(true);
         if (checkUserInfo()) {
             let data = user;
-            data.department = data.department.name
-            let arr = []
-
-            for (const key in data.type) {
-                arr.push(data.type[key].name)
-            }
-            data.type = arr
-            await ProjectsStore.createUser({ ...data }).then(() => {
+            data.department = data.department.name;
+            data.type = data.type[0].code;
+            console.log({...data});
+            await ProjectsStore.createUser({...data}).then(() => {
                 toast.current.show({ severity: 'success', summary: 'Successful', detail: `'User Created'`, life: 3000 });
             })
         }
@@ -318,7 +319,7 @@ const User = () => {
                 <h4 className='col-12'>Roles</h4>
                 <div className="field col-6 ">
                     <label>User's roles</label>
-                    <MultiSelect value={user.type} options={Roles} optionLabel="name" display="chip" onChange={(e) => onInputChange(e, 'type')}
+                    <MultiSelect value={user.type} maxSelectedLabels={1} options={Roles} optionLabel="name" display="chip" onChange={(e) => onInputChange(e, 'type')}
                         placeholder="Select Roles" className={classNames({ 'p-invalid': submitted && user.type.length == 0 })} />
                     {!submitted && <small className=' text-color-secondary'>User can have one or more roles</small>}
                     {submitted && user.type.length == 0 && <small className="p-invalid text-red-500">Select at least one role.</small>}
@@ -333,11 +334,6 @@ const User = () => {
         {
             label: 'Projects', icon: 'pi pi-fw  pi-file', command: () => {
                 router.push('/admin-panel/projects')
-            }
-        },
-        {
-            label: 'Releases', icon: 'pi pi-fw pi-tags', command: () => {
-                router.push('/admin-panel/releases')
             }
         },
         { label: 'users', icon: 'pi pi-fw pi-user', className: 'bg-green-100' },
