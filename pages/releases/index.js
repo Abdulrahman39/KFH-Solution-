@@ -240,14 +240,25 @@ const TableDemo = () => {
     const handleDownload = () => {
         console.log(navigator.userAgent);
 
-        if (navigator.userAgent.indexOf("Mac") !== -1)
-            alert("OS: macOS");
-        else if (navigator.userAgent.indexOf("Windows") !== -1)
-            alert("OS: Windows");
-        else if (navigator.userAgent.indexOf("iPhone") !== -1 || navigator.userAgent.indexOf("iPad") !== -1 || navigator.userAgent.indexOf("iPod") !== -1)
-            alert("OS: iOS");
-        else if (navigator.userAgent.indexOf("Android") !== -1)
-            alert("OS: Android");
+        if (navigator.userAgent.indexOf("Mac") !== -1) {
+            // alert("OS: macOS");
+            toast.current.show({ severity: 'info', summary: 'OS', detail: 'macOS', life: 3000 });
+        }
+        else if (navigator.userAgent.indexOf("Windows") !== -1) {
+            // alert("OS: Windows");
+            toast.current.show({ severity: 'info', summary: 'OS', detail: 'Windows', life: 3000 });
+
+        }
+        else if (navigator.userAgent.indexOf("iPhone") !== -1 || navigator.userAgent.indexOf("iPad") !== -1 || navigator.userAgent.indexOf("iPod") !== -1) {
+            // alert("OS: iOS");
+            toast.current.show({ severity: 'info', summary: 'OS', detail: 'ios', life: 3000 });
+
+        }
+        else if (navigator.userAgent.indexOf("Android") !== -1) {
+            // alert("OS: Android");
+            toast.current.show({ severity: 'info', summary: 'OS', detail: 'Andriod', life: 3000 });
+
+        }
     };
 
     const verifiedBodyTemplate = (rowData) => {

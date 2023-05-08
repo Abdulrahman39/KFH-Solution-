@@ -141,21 +141,21 @@ const TableDemo = () => {
         console.log(navigator.userAgent);
 
         if (navigator.userAgent.indexOf("Mac") !== -1) {
-            alert("OS: ");
+            // alert("OS: macOS");
             toast.current.show({ severity: 'info', summary: 'OS', detail: 'macOS', life: 3000 });
         }
         else if (navigator.userAgent.indexOf("Windows") !== -1) {
-            alert("OS: Windows");
+            // alert("OS: Windows");
             toast.current.show({ severity: 'info', summary: 'OS', detail: 'Windows', life: 3000 });
 
         }
         else if (navigator.userAgent.indexOf("iPhone") !== -1 || navigator.userAgent.indexOf("iPad") !== -1 || navigator.userAgent.indexOf("iPod") !== -1) {
-            alert("OS: iOS");
+            // alert("OS: iOS");
             toast.current.show({ severity: 'info', summary: 'OS', detail: 'ios', life: 3000 });
 
         }
         else if (navigator.userAgent.indexOf("Android") !== -1) {
-            alert("OS: Android");
+            // alert("OS: Android");
             toast.current.show({ severity: 'info', summary: 'OS', detail: 'Andriod', life: 3000 });
 
         }
