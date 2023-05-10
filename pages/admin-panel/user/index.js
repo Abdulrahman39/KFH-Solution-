@@ -40,8 +40,8 @@ const User = () => {
     const [usersInfo, setUsersInfo] = useState(null)
 
     const emptyuser = {
-        firstname: '',
-        lastname: '',
+        firstName: '',
+        lastName: '',
         email: '',
         department: [],
         type: [],
@@ -86,7 +86,7 @@ const User = () => {
     };
 
     const checkUserInfo = () => {
-        if (user.firstname === '' || user.email === '' || user.department.length === 0 || user.type.length === 0) {
+        if (user.firstName === '' || user.email === '' || user.department.length === 0 || user.type.length === 0) {
             console.log("FALSE!!!");
             return false;
         }
@@ -283,16 +283,16 @@ const User = () => {
 
                     <div className="field col-6 ">
                         <label htmlFor="name">First Name</label>
-                        <InputText id="firstname" placeholder='First name' value={user.firstname} onChange={(e) => onInputChange(e, 'firstname')} required autoFocus className={classNames({ 'p-invalid': submitted && !user.firstname })} />
+                        <InputText id="firstName" placeholder='First name' value={user.firstName} onChange={(e) => onInputChange(e, 'firstName')} required autoFocus className={classNames({ 'p-invalid': submitted && !user.firstName })} />
 
-                        {submitted && !user.firstname && <small className="p-invalid text-red-500">First name is required.</small>}
+                        {submitted && !user.firstName && <small className="p-invalid text-red-500">First name is required.</small>}
                     </div>
 
                     <div className="field col-6 ">
-                        <label htmlFor="lastname">Last Name</label>
-                        <InputText id="lastname" placeholder='Last name' value={user.lastname} onChange={(e) => onInputChange(e, 'lastname')} required autoFocus className={classNames({ 'p-invalid': submitted && !user.lastname })} />
+                        <label htmlFor="lastName">Last Name</label>
+                        <InputText id="lastName" placeholder='Last name' value={user.lastName} onChange={(e) => onInputChange(e, 'lastName')} required autoFocus className={classNames({ 'p-invalid': submitted && !user.lastName })} />
 
-                        {submitted && !user.lastname && <small className="p-invalid text-red-500">Last name is required.</small>}
+                        {submitted && !user.lastName && <small className="p-invalid text-red-500">Last name is required.</small>}
                     </div>
 
                 </div>
