@@ -36,12 +36,12 @@ const TableDemo = () => {
     };
     useEffect(() => {
 
-        const releaseID = router.query;
+        const releaseID = router.query.id;
         async function releases() {
-            await projectsStore.getRelease(releaseID.id).then((res) => {
+            await projectsStore.getRelease(releaseID).then((res) => {
                 setReleaseInfo(res);
                 setLoading1(false);
-                console.log('idddddddddddddddddddddd', releaseID.id)
+                console.log('idddddddddddddddddddddd', releaseID)
 
             })
 

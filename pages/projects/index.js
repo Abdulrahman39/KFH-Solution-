@@ -37,11 +37,11 @@ const Dashboard = () => {
         return backgroundCss;
     }
 
-    let projectsCards = projectsStore.projects.map(p => (<ProjectCard key={p.name} {...{...p, color: RandomColor}}  />));
+    let projectsCards = projectsStore.projects.map(p => (<ProjectCard key={p.name} {...{...p, color: RandomColor()}}  />));
 
     // useEffect(async () => {
     //     await projectsStore.getProject()
-    //     projectsCards = projectsStore.projects.map(p => (<ProjectCard key={p.name} {...{...p, color: RandomColor}} />));
+    //    let projectsCards = projectsStore.projects.map(p => (<ProjectCard key={p.name} {...{...p, color: RandomColor()}} />));
     // }, []);
 
 

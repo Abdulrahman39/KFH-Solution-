@@ -27,8 +27,9 @@ const User = () => {
     };
 
     const [products, setProducts] = useState(null);
-    const [productDialog, setProductDialog] = useState(false);
-    const [deleteProductDialog, setDeleteProductDialog] = useState(false);
+    const [userDialog, setUserDialog] = useState(false);
+    const [editUserDialog, setEditUserDialog] = useState(false);
+    const [deleteUserDialog, setDeleteUserDialog] = useState(false);
     const [deleteProductsDialog, setDeleteProductsDialog] = useState(false);
     const [product, setProduct] = useState(emptyProduct);
     const [selectedProducts, setSelectedProducts] = useState(null);
@@ -47,7 +48,7 @@ const User = () => {
         type: [],
     }
     const [user, setUser] = useState(emptyuser)
-    const Roles = [{ name: 'Developer',code:1 }, { name: 'Admin', code:0  }, { name: 'Tester',code:2 }]
+    const Roles = [{ name: 'Developer', code: 1 }, { name: 'Admin', code: 0 }, { name: 'Tester', code: 2 }]
     const departments = [{ name: 'IT' }, { name: 'HR' }, { name: 'PR' }]
 
     useEffect(() => {
@@ -68,17 +69,18 @@ const User = () => {
     const openNew = () => {
         setUser(emptyuser);
         setSubmitted(false);
-        setProductDialog(true);
+        setUserDialog(true);
     };
 
     const hideDialog = () => {
         setSubmitted(false);
-        setProductDialog(false);
+        setUserDialog(false);
+        setEditUserDialog(false)
         setUser(emptyuser)
     };
 
-    const hideDeleteProductDialog = () => {
-        setDeleteProductDialog(false);
+    const hideDeleteUserDialog = () => {
+        setDeleteUserDialog(false);
     };
 
     const hideDeleteProductsDialog = () => {
@@ -101,30 +103,42 @@ const User = () => {
             let data = user;
             data.department = data.department.name;
             data.type = data.type[0].code;
-            console.log({...data});
-            await ProjectsStore.createUser({...data}).then(() => {
+            console.log({ ...data });
+            await ProjectsStore.createUser({ ...data }).then(() => {
                 toast.current.show({ severity: 'success', summary: 'Successful', detail: `'User Created'`, life: 3000 });
             })
         }
 
     };
 
-    const editProduct = (product) => {
-        setProduct({ ...product });
-        setProductDialog(true);
+    const editUser = async (User) => {
+        setUser(User);
+        setEditUserDialog(true);
     };
 
-    const confirmDeleteProduct = (product) => {
-        setProduct(product);
-        setDeleteProductDialog(true);
+    const editSubmitted = async () => {
+        let data ={
+            firstName: user.firstName,
+            lastName: user.lastName,
+            department: user.department.name,
+            type: user.type.code
+        } 
+        await ProjectsStore.editUser(user.id, data);
+    };
+
+    const confirmDeleteProduct = async (User) => {
+        setUser(User)
+        setDeleteUserDialog(true);
+        console.log(User, user)
+        await ProjectsStore.deleteUser(User.id)
     };
 
     const deleteProduct = () => {
-        let _products = products.filter((val) => val.id !== product.id);
-        setProducts(_products);
-        setDeleteProductDialog(false);
-        setProduct(emptyProduct);
-        toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Product Deleted', life: 3000 });
+        let _users = usersInfo.filter((val) => val.id !== user.id);
+        setUsersInfo(_users);
+        setDeleteUserDialog(false);
+        setUser(emptyuser);
+        toast.current.show({ severity: 'success', summary: 'Successful', detail: 'User Deleted', life: 3000 });
     };
 
 
@@ -226,7 +240,7 @@ const User = () => {
     const actionBodyTemplate = (rowData) => {
         return (
             <>
-                <Button icon="pi pi-pencil" text raised severity="success" rounded className="mr-2" onClick={() => editProduct(rowData)} />
+                <Button icon="pi pi-pencil" text raised severity="success" rounded className="mr-2" onClick={() => editUser(rowData)} />
                 <Button icon="pi pi-trash" text raised severity="danger" rounded onClick={() => confirmDeleteProduct(rowData)} />
             </>
         );
@@ -242,15 +256,21 @@ const User = () => {
         </div>
     );
 
-    const productDialogFooter = (
+    const userDialogFooter = (
         <div className='flex justify-content-between'>
             <Button label="Cancel" icon="pi pi-times" text onClick={hideDialog} />
             <Button label="Save" icon="pi pi-check" text onClick={CreateUser} />
         </div>
     );
-    const deleteProductDialogFooter = (
+    const edituserDialogFooter = (
+        <div className='flex justify-content-between'>
+            <Button label="Cancel" icon="pi pi-times" text onClick={hideDialog} />
+            <Button label="Edit" icon="pi pi-check" text onClick={editSubmitted} />
+        </div>
+    );
+    const deleteUserDialogFooter = (
         <>
-            <Button label="No" icon="pi pi-times" text onClick={hideDeleteProductDialog} />
+            <Button label="No" icon="pi pi-times" text onClick={hideDeleteUserDialog} />
             <Button label="Yes" icon="pi pi-check" text onClick={deleteProduct} />
         </>
     );
@@ -329,6 +349,61 @@ const User = () => {
             </div>
         );
     };
+    const editUserCode = () => {
+        return (
+            <div className='grid m-3'>
+                <h4 className='col-12'>Deltails</h4>
+
+                <div className='grid col-12 mb-3'>
+
+                    <div className="field col-6 ">
+                        <label htmlFor="name">First Name</label>
+                        <InputText id="firstName" placeholder='First name' value={user.firstName} onChange={(e) => onInputChange(e, 'firstName')} required autoFocus className={classNames({ 'p-invalid': submitted && !user.firstName })} />
+
+                        {submitted && !user.firstName && <small className="p-invalid text-red-500">First name is required.</small>}
+                    </div>
+
+                    <div className="field col-6 ">
+                        <label htmlFor="lastName">Last Name</label>
+                        <InputText id="lastName" placeholder='Last name' value={user.lastName} onChange={(e) => onInputChange(e, 'lastName')} required autoFocus className={classNames({ 'p-invalid': submitted && !user.lastName })} />
+
+                        {submitted && !user.lastName && <small className="p-invalid text-red-500">Last name is required.</small>}
+                    </div>
+
+                </div>
+
+
+                <div className='grid col-12 mb-3'>
+
+                    <div className="field col-6 ">
+                        <label htmlFor="email">Email</label>
+                        <InputText id="email" placeholder='Email' type='email' value={user.email} onChange={(e) => onInputChange(e, 'email')} required autoFocus className={classNames({ 'p-invalid': submitted && !user.email })} />
+                        {submitted && !user.email && <small className="p-invalid text-red-500">Email is required.</small>}
+                    </div>
+
+                    <div className="field col-6 ">
+                        <label htmlFor="department">Department</label>
+                        <Dropdown value={user.department} onChange={(e) => onInputChange(e, 'department')} options={departments} optionLabel="name"
+                            placeholder="Select Department" className={classNames({ 'p-invalid': submitted && user.department.length == 0 })} />
+                        {submitted && user.department.length == 0 && <small className="p-invalid text-red-500">Department is required.</small>}
+                    </div>
+
+                </div>
+
+                {/* roles */}
+                <h4 className='col-12'>Roles</h4>
+                <div className="field col-6 ">
+                    <label>User's roles</label>
+                    <Dropdown value={user.type} options={Roles} optionLabel="name" display="chip" onChange={(e) => onInputChange(e, 'type')}
+                        placeholder="Select Roles" className={classNames({ 'p-invalid': submitted && user.type.length == 0 })} />
+                    {!submitted && <small className=' text-color-secondary'>User can have one or more roles</small>}
+                    {submitted && user.type.length == 0 && <small className="p-invalid text-red-500">Select at least one role.</small>}
+
+                </div>
+
+            </div>
+        );
+    };
 
     let items = [
         {
@@ -395,11 +470,14 @@ const User = () => {
 
 
                         {/* Add new user */}
-                        <Dialog visible={productDialog} style={{ width: '750px' }} header="Add New User" modal className="p-fluid" footer={productDialogFooter} onHide={hideDialog}>
+                        <Dialog visible={userDialog} style={{ width: '750px' }} header="Add New User" modal className="p-fluid" footer={userDialogFooter} onHide={hideDialog}>
                             {addUserCode()}
                         </Dialog>
+                        <Dialog visible={editUserDialog} style={{ width: '750px' }} header="Add New User" modal className="p-fluid" footer={edituserDialogFooter} onHide={hideDialog}>
+                            {editUserCode()}
+                        </Dialog>
 
-                        <Dialog visible={deleteProductDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteProductDialogFooter} onHide={hideDeleteProductDialog}>
+                        <Dialog visible={deleteUserDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteUserDialogFooter} onHide={hideDeleteUserDialog}>
                             <div className="flex align-items-center justify-content-center">
                                 <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
                                 {product && (

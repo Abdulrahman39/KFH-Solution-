@@ -1,5 +1,5 @@
 import instance from "./instance";
-import {makeAutoObservable, makeObservable, observable} from "mobx";
+import { makeAutoObservable, makeObservable, observable } from "mobx";
 import { console } from "next/dist/compiled/@edge-runtime/primitives/console";
 import FormData from 'form-data';
 
@@ -51,8 +51,8 @@ class ProjectsStore {
 
     editUser = async (userId, data) => {
         try {
-            const res = await instance.put(`user/${userId}`, data, { 'Content-Type': 'application/json' });
-            // console.log(res);
+            const res = await instance.put(`user/${userId}`, data);
+            console.log(res);
             // this.users = res
             return res;
         } catch (error) {
