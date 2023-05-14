@@ -17,9 +17,12 @@ import { CustomerService } from '../../demo/service/CustomerService';
 import { ProductService } from '../../demo/service/ProductService';
 import projectsStore from "../../stores/projectsStore";
 import { Toast } from 'primereact/toast';
+import axios, {Axios} from 'axios'
+import fileDownload from 'js-file-download'
 
 import { InputText } from 'primereact/inputtext';
 import { useRouter } from "next/router";
+import instance from "../../stores/instance";
 
 const TableDemo = () => {
     const toast = useRef(null);
@@ -29,6 +32,14 @@ const TableDemo = () => {
     const [globalFilterValue1, setGlobalFilterValue1] = useState('');
     const [releaseInfo, setReleaseInfo] = useState(null)
 
+    // const download = axios.create({
+    //     baseURL: "http://localhost:8080/",
+    //     headers: {
+    //         "mode": "no-cors",
+    //     },
+    //
+    //
+    // });
 
     const router = useRouter();
     const clearFilter1 = () => {
@@ -137,7 +148,7 @@ const TableDemo = () => {
 
 
 
-    const handleDownload = () => {
+    const handleDownload = (rowData) => {
         console.log(navigator.userAgent);
 
         if (navigator.userAgent.indexOf("Mac") !== -1) {
@@ -161,7 +172,19 @@ const TableDemo = () => {
         }
     };
     const verifiedBodyTemplate = (rowData) => {
-        return <i className='text-gray-700 text-3xl pi pi-cloud-download' onClick={handleDownload}></i>;
+        let url = '';
+        if (rowData.releaseFilesList.length === 2) {
+            for (let i = 0; i < rowData.releaseFilesList.length; i++) {
+                if (rowData.releaseFilesList[i].filename.endsWith(".plist")) {
+                    url = `itms-services://?action=download-manifest&url=http://localhost:8080${rowData.releaseFilesList[0].filename.substring(rowData.releaseFilesList[0].filename.indexOf("/uploads"), rowData.releaseFilesList[0].filename.length)}`;
+                }
+            }
+        } else
+            url = `http://localhost:8080${rowData.releaseFilesList[0].filename.substring(rowData.releaseFilesList[0].filename.indexOf("/uploads"), rowData.releaseFilesList[0].filename.length)}`;
+
+        return <a href={url}>
+            <i className='text-gray-700 text-3xl pi pi-cloud-download'></i>
+        </a>;
     };
 
 
