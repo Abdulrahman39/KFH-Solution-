@@ -34,66 +34,54 @@ const AdminProjects = () => {
         rating: 0,
         inventoryStatus: 'INSTOCK'
     };
-    const representatives = [
-        { name: 'Amy Elsner', image: 'amyelsner.png' },
-        { name: 'Anna Fali', image: 'annafali.png' },
-        { name: 'Asiya Javayant', image: 'asiyajavayant.png' },
-        { name: 'Bernardo Dominic', image: 'bernardodominic.png' },
-        { name: 'Elwin Sharvill', image: 'elwinsharvill.png' },
-        { name: 'Ioni Bowcher', image: 'ionibowcher.png' },
-        { name: 'Ivan Magalhaes', image: 'ivanmagalhaes.png' },
-        { name: 'Onyama Limba', image: 'onyamalimba.png' },
-        { name: 'Stephen Shaw', image: 'stephenshaw.png' },
-        { name: 'XuXue Feng', image: 'xuxuefeng.png' }
-    ];
-
-    const [products, setProducts] = useState(null);
-    const [productDialog, setProductDialog] = useState(false);
-    const [deleteProductDialog, setDeleteProductDialog] = useState(false);
-    const [deleteProductsDialog, setDeleteProductsDialog] = useState(false);
-    const [product, setProduct] = useState(emptyProduct);
-    const [selectedProducts, setSelectedProducts] = useState(null);
-    const [submitted, setSubmitted] = useState(false);
-    const [globalFilter, setGlobalFilter] = useState(null);
-    const toast = useRef(null);
-    const dt = useRef(null);
 
     const emptyproject = {
         name: '',
         description: '',
         members: []
     }
+    const [products, setProducts] = useState(null);
+    const [projectDialog, setProjectDialog] = useState(false);
+    const [editprojectDialog, setEditProjectDialog] = useState(false);
+    const [deleteProjectDialog, setDeleteProjectDialog] = useState(false);
+    const [deleteProjectsDialog, setDeleteProjectsDialog] = useState(false);
+    const [product, setProduct] = useState(emptyProduct);
+    const [selectedProducts, setSelectedProducts] = useState(null);
+    const [submitted, setSubmitted] = useState(false);
+    const [globalFilter, setGlobalFilter] = useState(null);
+    const toast = useRef(null);
+    const dt = useRef(null);
     const [project, setProject] = useState(emptyproject)
+    const [projects, setProjects] = useState(projectsStore.projects)
 
     useEffect(() => {
         ProductService.getProducts().then((data) => setProducts(data));
     }, []);
 
-    const formatCurrency = (value) => {
-        return value.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
-    };
+
 
     const openNew = () => {
         setProduct(emptyProduct);
         setSubmitted(false);
-        setProductDialog(true);
+        setProjectDialog(true);
     };
 
     const hideDialog = () => {
         setSubmitted(false);
-        setProductDialog(false);
+        setProjectDialog(false);
+        setEditProjectDialog(false);
         setProject(emptyproject)
     };
 
     const hideDeleteProductDialog = () => {
-        setDeleteProductDialog(false);
+        setDeleteProjectDialog(false);
     };
 
     const hideDeleteProductsDialog = () => {
-        setDeleteProductsDialog(false);
+        setDeleteProjectsDialog(false);
     };
 
-    const saveProduct = async () => {
+    const saveProject = async () => {
         const newPorject = {
             name: project.name,
             description: project.description,
@@ -104,79 +92,50 @@ const AdminProjects = () => {
         hideDialog();
     };
 
-    const editProduct = (product) => {
-        setProduct({ ...product });
-        setProductDialog(true);
+    const editProject = (project) => {
+        setProject(project );
+        setEditProjectDialog(true);
     };
 
-    const confirmDeleteProduct = (product) => {
-        setProduct(product);
-        setDeleteProductDialog(true);
+    const editSubmitted = async () => {
+        const data ={
+            name: project.name,
+            description: project.description,
+            participantsIds: project.members.map(m => m.id)
+        } 
+        await projectsStore.editProject(project.id,data).then(()=>{
+            setEditProjectDialog(false);
+
+        })
+    }
+
+    const confirmDeleteProject = (project) => {
+        setProject(project);
+        setDeleteProjectDialog(true);
     };
 
-    const deleteProduct = () => {
-        let _products = products.filter((val) => val.id !== product.id);
-        setProducts(_products);
-        setDeleteProductDialog(false);
-        setProduct(emptyProduct);
-        toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Product Deleted', life: 3000 });
+    const deleteProject = async () => {
+        let _projects = projectsStore.projects.filter((val) => val.id !== project.id);
+        setProjects(_projects);
+        setDeleteProjectDialog(false);
+        setProject(emptyproject);
+        await projectsStore.deleteProject(project.id)
+
+        toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Project Deleted', life: 3000 });
     };
 
-    const findIndexById = (id) => {
-        let index = -1;
-        for (let i = 0; i < products.length; i++) {
-            if (products[i].id === id) {
-                index = i;
-                break;
-            }
-        }
-
-        return index;
-    };
-
-    const createId = () => {
-        let id = '';
-        let chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-        for (let i = 0; i < 5; i++) {
-            id += chars.charAt(Math.floor(Math.random() * chars.length));
-        }
-        return id;
-    };
-
-    const exportCSV = () => {
-        dt.current.exportCSV();
-    };
 
 
     const deleteSelectedProducts = () => {
         let _products = products.filter((val) => !selectedProducts.includes(val));
         setProducts(_products);
-        setDeleteProductsDialog(false);
+        setDeleteProjectsDialog(false);
         setSelectedProducts(null);
         toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Products Deleted', life: 3000 });
     };
 
-    const onCategoryChange = (e) => {
-        let _product = { ...product };
-        _product['category'] = e.value;
-        setProduct(_product);
-    };
 
-    // const onInputChange = (e, name) => {
-    //     const val = (e.target && e.target.value) || '';
-    //     let _product = { ...product };
-    //     _product[`${name}`] = val;
 
-    //     setProduct(_product);
-    // };
-
-    const onInputNumberChange = (e, name) => {
-        const val = e.value || 0;
-        let _product = { ...product };
-        _product[`${name}`] = val;
-
-        setProduct(_product);
-    };
 
     const leftToolbarTemplate = () => {
         return (
@@ -188,23 +147,8 @@ const AdminProjects = () => {
         );
     };
 
-    const rightToolbarTemplate = () => {
-        return (
-            <React.Fragment>
-                <FileUpload mode="basic" accept="image/*" maxFileSize={1000000} label="Import" chooseLabel="Import" className="mr-2 inline-block" />
-                <Button label="Export" icon="pi pi-upload" severity="help" onClick={exportCSV} />
-            </React.Fragment>
-        );
-    };
 
-    const codeBodyTemplate = (rowData) => {
-        return (
-            <>
-                <span className="p-column-title">Code</span>
-                {rowData.code}
-            </>
-        );
-    };
+
 
     const nameBodyTemplate = (rowData) => {
         return (
@@ -215,14 +159,7 @@ const AdminProjects = () => {
         );
     };
 
-    const imageBodyTemplate = (rowData) => {
-        return (
-            <>
-                <span className="p-column-title">Image</span>
-                <img src={`/demo/images/product/${rowData.image}`} alt={rowData.image} className="shadow-2" width="100" />
-            </>
-        );
-    };
+
 
     const descBodyTemplate = (rowData) => {
         return (
@@ -233,33 +170,28 @@ const AdminProjects = () => {
         );
     };
 
-    const categoryBodyTemplate = (rowData) => {
-        return (
-            <>
-                <span className="p-column-title">Category</span>
-                {rowData.category}
-            </>
-        );
-    };
-
-    const ratingBodyTemplate = (rowData) => {
-        return (
-            <>
-                <span className="p-column-title">Reviews</span>
-                <Rating value={rowData.rating} readOnly cancel={false} />
-            </>
-        );
-    };
 
     const membersBodyTemplate = (rowData) => {
+        let users = [];
+        let usersleft = 0
+
+        if (Array.isArray(rowData.participants)) {
+            users = rowData.participants.map(p => <Avatar image='/layout/images/KFHLOGO.png' shape='circle' tooltip={p.firstName}></Avatar>)
+        
+        }
+
+        // users = <Avatar image='/layout/images/KFHLOGO.png' shape='circle' tooltip={rowData.participants.firstName}></Avatar>
+        console.log(Array.isArray(rowData.participants), Array.isArray(rowData.participants) ? rowData.participants : rowData.participants, users.length)
         return (
             <>
                 <AvatarGroup>
+                    {/* <Avatar image='/layout/images/KFHLOGO.png' shape='circle'></Avatar>
                     <Avatar image='/layout/images/KFHLOGO.png' shape='circle'></Avatar>
                     <Avatar image='/layout/images/KFHLOGO.png' shape='circle'></Avatar>
                     <Avatar image='/layout/images/KFHLOGO.png' shape='circle'></Avatar>
-                    <Avatar image='/layout/images/KFHLOGO.png' shape='circle'></Avatar>
-                    <Avatar label="+2" shape="circle" />
+                    <Avatar label="+2" shape="circle" /> */}
+                    {users.length >= 4 ? users.slice(0, 4)  : users}
+                    {users.length >= 4&& <Avatar label={`+${users.length - 4}`} shape="circle" />}
 
                 </AvatarGroup>
             </>
@@ -269,8 +201,8 @@ const AdminProjects = () => {
     const actionBodyTemplate = (rowData) => {
         return (
             <>
-                <Button icon="pi pi-pencil" text raised severity="success" rounded className="mr-2" onClick={() => editProduct(rowData)} />
-                <Button icon="pi pi-trash" text raised severity="warning" rounded onClick={() => confirmDeleteProduct(rowData)} />
+                <Button icon="pi pi-pencil" text raised severity="success" rounded className="mr-2" onClick={() => editProject(rowData)} />
+                <Button icon="pi pi-trash" text raised severity="danger" rounded onClick={() => confirmDeleteProject(rowData)} />
             </>
         );
     };
@@ -288,13 +220,19 @@ const AdminProjects = () => {
     const productDialogFooter = (
         <div className='flex justify-content-between'>
             <Button label="Cancel" icon="pi pi-times" text onClick={hideDialog} />
-            <Button label="Save" icon="pi pi-check" text onClick={saveProduct} />
+            <Button label="Save" icon="pi pi-check" text onClick={saveProject} />
+        </div>
+    );
+    const editproductDialogFooter = (
+        <div className='flex justify-content-between'>
+            <Button label="Cancel" icon="pi pi-times" text onClick={hideDialog} />
+            <Button label="edit" icon="pi pi-check" text onClick={editSubmitted} />
         </div>
     );
     const deleteProductDialogFooter = (
         <>
             <Button label="No" icon="pi pi-times" text onClick={hideDeleteProductDialog} />
-            <Button label="Yes" icon="pi pi-check" text onClick={deleteProduct} />
+            <Button label="Yes" icon="pi pi-check" text onClick={deleteProject} />
         </>
     );
     const deleteProductsDialogFooter = (
@@ -314,6 +252,32 @@ const AdminProjects = () => {
     };
 
     const addProjectCode = () => {
+        return (
+            <div className='col'>
+                <div className="field mt-2 lg:col-6">
+                    <label htmlFor="name">Project Name</label>
+                    <InputText id="name" value={project.name} onChange={(e) => onInputChange(e, 'name')} required autoFocus className={classNames({ 'p-invalid': submitted && !project.name })} />
+                    {submitted && !project.name && <small className="p-invalid text-red-500">Name is required.</small>}
+                </div>
+                <div className="field lg:col-6">
+                    <label htmlFor="description">Description</label>
+                    <InputTextarea id="description" value={project.description} onChange={(e) => onInputChange(e, 'description')} required rows={3} cols={20} className={classNames({ 'p-invalid': submitted && !project.description })} />
+                    {submitted && !project.description && <small className="p-invalid text-red-500">Description is required.</small>}
+
+                </div>
+
+                <div className="field lg:col-6">
+                    <MultiSelect value={project.members} onChange={(e) => onInputChange(e, 'members')} options={projectsStore.users} optionLabel="email" display="chip"
+                        placeholder="Select Members" className={classNames({ 'p-invalid': submitted && !project.members.length != 0 })} />
+                    {submitted && !project.members.length != 0 && <small className="p-invalid text-red-500">Select at least one member.</small>}
+
+                </div>
+            </div>
+
+        )
+    }
+
+    const editProjectCode = () => {
         return (
             <div className='col'>
                 <div className="field mt-2 lg:col-6">
@@ -371,7 +335,6 @@ const AdminProjects = () => {
                         <h2>Projects</h2>
                         <div className=' flex '>{leftToolbarTemplate()}</div>
                     </div>
-                    {/* <Toolbar className="mb-4  border-0"  right={leftToolbarTemplate}></Toolbar> */}
                     <p className='lg:text-lg'>Create, edit and manage Projects and who has access to each project.</p>
                     <div className="card">
 
@@ -381,8 +344,6 @@ const AdminProjects = () => {
                         <DataTable
                             ref={dt}
                             value={projectsStore.projects}
-                            selection={selectedProducts}
-                            onSelectionChange={(e) => setSelectedProducts(e.value)}
                             dataKey="id"
                             paginator
                             rows={10}
@@ -395,30 +356,33 @@ const AdminProjects = () => {
                             header={header}
                             responsiveLayout="scroll"
                         >
-                            <Column selectionMode="multiple" headerStyle={{ width: '4rem' }}></Column>
                             <Column field="name" header="Name" sortable body={nameBodyTemplate} headerStyle={{ minWidth: '15rem' }}></Column>
                             <Column field="description" header="Description" body={descBodyTemplate} sortable></Column>
                             <Column field="members" header="Members" body={membersBodyTemplate} sortable headerStyle={{ minWidth: '10rem' }}></Column>
                             <Column body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
                         </DataTable>
 
-                        <Dialog visible={productDialog} style={{ width: '750px' }} header="Add new project" modal className="p-fluid" footer={productDialogFooter} onHide={hideDialog}>
+                        <Dialog visible={projectDialog} style={{ width: '750px' }} header="Add new project" modal className="p-fluid" footer={productDialogFooter} onHide={hideDialog}>
                             {addProjectCode()}
 
                         </Dialog>
+                        <Dialog visible={editprojectDialog} style={{ width: '750px' }} header="Add new project" modal className="p-fluid" footer={editproductDialogFooter} onHide={hideDialog}>
+                            {editProjectCode()}
 
-                        <Dialog visible={deleteProductDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteProductDialogFooter} onHide={hideDeleteProductDialog}>
+                        </Dialog>
+
+                        <Dialog visible={deleteProjectDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteProductDialogFooter} onHide={hideDeleteProductDialog}>
                             <div className="flex align-items-center justify-content-center">
                                 <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
                                 {product && (
                                     <span>
-                                        Are you sure you want to delete <b>{product.name}</b>?
+                                        Are you sure you want to delete <b>{project.name}</b>?
                                     </span>
                                 )}
                             </div>
                         </Dialog>
 
-                        <Dialog visible={deleteProductsDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteProductsDialogFooter} onHide={hideDeleteProductsDialog}>
+                        <Dialog visible={deleteProjectsDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteProductsDialogFooter} onHide={hideDeleteProductsDialog}>
                             <div className="flex align-items-center justify-content-center">
                                 <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
                                 {product && <span>Are you sure you want to delete the selected products?</span>}
