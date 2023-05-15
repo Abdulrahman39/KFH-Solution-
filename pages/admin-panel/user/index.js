@@ -14,25 +14,13 @@ import { useRouter } from 'next/router';
 import ProjectsStore from '../../../stores/projectsStore';
 
 const User = () => {
-    let emptyProduct = {
-        id: null,
-        name: '',
-        image: null,
-        description: '',
-        category: null,
-        price: 0,
-        quantity: 0,
-        rating: 0,
-        inventoryStatus: 'INSTOCK'
-    };
+ 
 
-    const [products, setProducts] = useState(null);
     const [userDialog, setUserDialog] = useState(false);
     const [editUserDialog, setEditUserDialog] = useState(false);
     const [deleteUserDialog, setDeleteUserDialog] = useState(false);
-    const [deleteProductsDialog, setDeleteProductsDialog] = useState(false);
-    const [product, setProduct] = useState(emptyProduct);
-    const [selectedProducts, setSelectedProducts] = useState(null);
+    const [deleteUsersDialog, setDeleteUsersDialog] = useState(false);
+    const [selectedUsers, setSelectedUsers] = useState(null);
     const [submitted, setSubmitted] = useState(false);
     const [globalFilter, setGlobalFilter] = useState(null);
     const toast = useRef(null);
@@ -83,8 +71,8 @@ const User = () => {
         setDeleteUserDialog(false);
     };
 
-    const hideDeleteProductsDialog = () => {
-        setDeleteProductsDialog(false);
+    const hideDeleteUsersDialog = () => {
+        setDeleteUsersDialog(false);
     };
 
     const checkUserInfo = () => {
@@ -126,14 +114,14 @@ const User = () => {
         await ProjectsStore.editUser(user.id, data);
     };
 
-    const confirmDeleteProduct = async (User) => {
+    const confirmDeleteUser = async (User) => {
         setUser(User)
         setDeleteUserDialog(true);
         console.log(User, user)
         await ProjectsStore.deleteUser(User.id)
     };
 
-    const deleteProduct = () => {
+    const deleteUser = () => {
         let _users = usersInfo.filter((val) => val.id !== user.id);
         setUsersInfo(_users);
         setDeleteUserDialog(false);
@@ -150,27 +138,20 @@ const User = () => {
     };
 
     const confirmDeleteSelected = () => {
-        setDeleteProductsDialog(true);
+        setDeleteUsersDialog(true);
     };
 
-    const deleteSelectedProducts = () => {
-        let _products = products.filter((val) => !selectedProducts.includes(val));
-        setProducts(_products);
-        setDeleteProductsDialog(false);
-        setSelectedProducts(null);
-        toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Products Deleted', life: 3000 });
+    const deleteSelectedUsers = () => {
+        let _users = usersInfo.filter((val) => !selectedUsers.includes(val));
+        setUsersInfo(_users);
+        setDeleteUsersDialog(false);
+        setSelectedUsers(null);
+        toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Users Deleted', life: 3000 });
     };
 
 
 
-    // const onInputChange = (e, name) => {
-    //     const val = (e.target && e.target.value) || '';
-    //     let _product = { ...product };
-    //     _product[`${name}`] = val;
-
-    //     setProduct(_product);
-    // };
-
+   
 
 
     const leftToolbarTemplate = () => {
@@ -241,7 +222,7 @@ const User = () => {
         return (
             <>
                 <Button icon="pi pi-pencil" text raised severity="success" rounded className="mr-2" onClick={() => editUser(rowData)} />
-                <Button icon="pi pi-trash" text raised severity="danger" rounded onClick={() => confirmDeleteProduct(rowData)} />
+                <Button icon="pi pi-trash" text raised severity="danger" rounded onClick={() => confirmDeleteUser(rowData)} />
             </>
         );
     };
@@ -271,13 +252,13 @@ const User = () => {
     const deleteUserDialogFooter = (
         <>
             <Button label="No" icon="pi pi-times" text onClick={hideDeleteUserDialog} />
-            <Button label="Yes" icon="pi pi-check" text onClick={deleteProduct} />
+            <Button label="Yes" icon="pi pi-check" text onClick={deleteUser} />
         </>
     );
-    const deleteProductsDialogFooter = (
+    const deleteUsersDialogFooter = (
         <>
-            <Button label="No" icon="pi pi-times" text onClick={hideDeleteProductsDialog} />
-            <Button label="Yes" icon="pi pi-check" text onClick={deleteSelectedProducts} />
+            <Button label="No" icon="pi pi-times" text onClick={hideDeleteUsersDialog} />
+            <Button label="Yes" icon="pi pi-check" text onClick={deleteSelectedUsers} />
         </>
     );
     const router = useRouter();
@@ -480,18 +461,18 @@ const User = () => {
                         <Dialog visible={deleteUserDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteUserDialogFooter} onHide={hideDeleteUserDialog}>
                             <div className="flex align-items-center justify-content-center">
                                 <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
-                                {product && (
+                                {user && (
                                     <span>
-                                        Are you sure you want to delete <b>{product.name}</b>?
+                                        Are you sure you want to delete <b>{user.name}</b>?
                                     </span>
                                 )}
                             </div>
                         </Dialog>
 
-                        <Dialog visible={deleteProductsDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteProductsDialogFooter} onHide={hideDeleteProductsDialog}>
+                        <Dialog visible={deleteUsersDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteUsersDialogFooter} onHide={hideDeleteUsersDialog}>
                             <div className="flex align-items-center justify-content-center">
                                 <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
-                                {user && <span>Are you sure you want to delete the selected products?</span>}
+                                {user && <span>Are you sure you want to delete the selected Users?</span>}
                             </div>
                         </Dialog>
                     </div>

@@ -2,17 +2,11 @@ import { Button } from 'primereact/button';
 import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
 import { Dialog } from 'primereact/dialog';
-import { FileUpload } from 'primereact/fileupload';
-import { InputNumber } from 'primereact/inputnumber';
 import { InputText } from 'primereact/inputtext';
 import { InputTextarea } from 'primereact/inputtextarea';
-import { RadioButton } from 'primereact/radiobutton';
-import { Rating } from 'primereact/rating';
 import { Toast } from 'primereact/toast';
-import { Toolbar } from 'primereact/toolbar';
 import { classNames } from 'primereact/utils';
 import React, { useEffect, useRef, useState } from 'react';
-import { ProductService } from '../../../demo/service/ProductService';
 import { Divider } from 'primereact/divider';
 import { Avatar } from 'primereact/avatar';
 import { AvatarGroup } from 'primereact/avatargroup';
@@ -23,30 +17,18 @@ import projectsStore from "../../../stores/projectsStore";
 
 
 const AdminProjects = () => {
-    let emptyProduct = {
-        id: null,
-        name: '',
-        image: null,
-        description: '',
-        category: null,
-        price: 0,
-        quantity: 0,
-        rating: 0,
-        inventoryStatus: 'INSTOCK'
-    };
+
 
     const emptyproject = {
         name: '',
         description: '',
-        members: []
+        participantsIds: []
     }
-    const [products, setProducts] = useState(null);
     const [projectDialog, setProjectDialog] = useState(false);
     const [editprojectDialog, setEditProjectDialog] = useState(false);
     const [deleteProjectDialog, setDeleteProjectDialog] = useState(false);
     const [deleteProjectsDialog, setDeleteProjectsDialog] = useState(false);
-    const [product, setProduct] = useState(emptyProduct);
-    const [selectedProducts, setSelectedProducts] = useState(null);
+    const [selectedProjects, setSelectedProjects] = useState(null);
     const [submitted, setSubmitted] = useState(false);
     const [globalFilter, setGlobalFilter] = useState(null);
     const toast = useRef(null);
@@ -55,13 +37,12 @@ const AdminProjects = () => {
     const [projects, setProjects] = useState(projectsStore.projects)
 
     useEffect(() => {
-        ProductService.getProducts().then((data) => setProducts(data));
     }, []);
 
 
 
     const openNew = () => {
-        setProduct(emptyProduct);
+        setProject(emptyproject);
         setSubmitted(false);
         setProjectDialog(true);
     };
@@ -73,11 +54,11 @@ const AdminProjects = () => {
         setProject(emptyproject)
     };
 
-    const hideDeleteProductDialog = () => {
+    const hideDeleteProjectDialog = () => {
         setDeleteProjectDialog(false);
     };
 
-    const hideDeleteProductsDialog = () => {
+    const hideDeleteProjectsDialog = () => {
         setDeleteProjectsDialog(false);
     };
 
@@ -85,7 +66,7 @@ const AdminProjects = () => {
         const newPorject = {
             name: project.name,
             description: project.description,
-            participantsIds: project.members.map(m => m.id)
+            participantsIds: project.participantsIds.map(m => m.id)
         };
 
         await projectsStore.addProject(newPorject);
@@ -101,7 +82,7 @@ const AdminProjects = () => {
         const data ={
             name: project.name,
             description: project.description,
-            participantsIds: project.members.map(m => m.id)
+            participantsIds: project.participantsIds.map(m => m.id)
         } 
         await projectsStore.editProject(project.id,data).then(()=>{
             setEditProjectDialog(false);
@@ -126,12 +107,12 @@ const AdminProjects = () => {
 
 
 
-    const deleteSelectedProducts = () => {
-        let _products = products.filter((val) => !selectedProducts.includes(val));
-        setProducts(_products);
+    const deleteSelectedProjects = () => {
+        let _projects = projects.filter((val) => !selectedProjects.includes(val));
+        setProjects(_projects);
         setDeleteProjectsDialog(false);
-        setSelectedProducts(null);
-        toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Products Deleted', life: 3000 });
+        setSelectedProjects(null);
+        toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Projects Deleted', life: 3000 });
     };
 
 
@@ -173,23 +154,17 @@ const AdminProjects = () => {
 
     const membersBodyTemplate = (rowData) => {
         let users = [];
-        let usersleft = 0
 
         if (Array.isArray(rowData.participants)) {
             users = rowData.participants.map(p => <Avatar image='/layout/images/KFHLOGO.png' shape='circle' tooltip={p.firstName}></Avatar>)
         
         }
 
-        // users = <Avatar image='/layout/images/KFHLOGO.png' shape='circle' tooltip={rowData.participants.firstName}></Avatar>
         console.log(Array.isArray(rowData.participants), Array.isArray(rowData.participants) ? rowData.participants : rowData.participants, users.length)
         return (
             <>
                 <AvatarGroup>
-                    {/* <Avatar image='/layout/images/KFHLOGO.png' shape='circle'></Avatar>
-                    <Avatar image='/layout/images/KFHLOGO.png' shape='circle'></Avatar>
-                    <Avatar image='/layout/images/KFHLOGO.png' shape='circle'></Avatar>
-                    <Avatar image='/layout/images/KFHLOGO.png' shape='circle'></Avatar>
-                    <Avatar label="+2" shape="circle" /> */}
+                   
                     {users.length >= 4 ? users.slice(0, 4)  : users}
                     {users.length >= 4&& <Avatar label={`+${users.length - 4}`} shape="circle" />}
 
@@ -217,28 +192,28 @@ const AdminProjects = () => {
         </div>
     );
 
-    const productDialogFooter = (
+    const projectDialogFooter = (
         <div className='flex justify-content-between'>
             <Button label="Cancel" icon="pi pi-times" text onClick={hideDialog} />
             <Button label="Save" icon="pi pi-check" text onClick={saveProject} />
         </div>
     );
-    const editproductDialogFooter = (
+    const editprojectDialogFooter = (
         <div className='flex justify-content-between'>
             <Button label="Cancel" icon="pi pi-times" text onClick={hideDialog} />
             <Button label="edit" icon="pi pi-check" text onClick={editSubmitted} />
         </div>
     );
-    const deleteProductDialogFooter = (
+    const deleteProjectDialogFooter = (
         <>
-            <Button label="No" icon="pi pi-times" text onClick={hideDeleteProductDialog} />
+            <Button label="No" icon="pi pi-times" text onClick={hideDeleteProjectDialog} />
             <Button label="Yes" icon="pi pi-check" text onClick={deleteProject} />
         </>
     );
-    const deleteProductsDialogFooter = (
+    const deleteProjectsDialogFooter = (
         <>
-            <Button label="No" icon="pi pi-times" text onClick={hideDeleteProductsDialog} />
-            <Button label="Yes" icon="pi pi-check" text onClick={deleteSelectedProducts} />
+            <Button label="No" icon="pi pi-times" text onClick={hideDeleteProjectsDialog} />
+            <Button label="Yes" icon="pi pi-check" text onClick={deleteSelectedProjects} />
         </>
     );
     const router = useRouter();
@@ -267,9 +242,9 @@ const AdminProjects = () => {
                 </div>
 
                 <div className="field lg:col-6">
-                    <MultiSelect value={project.members} onChange={(e) => onInputChange(e, 'members')} options={projectsStore.users} optionLabel="email" display="chip"
-                        placeholder="Select Members" className={classNames({ 'p-invalid': submitted && !project.members.length != 0 })} />
-                    {submitted && !project.members.length != 0 && <small className="p-invalid text-red-500">Select at least one member.</small>}
+                    <MultiSelect value={project.participantsIds} onChange={(e) => onInputChange(e, 'participantsIds')} options={projectsStore.users} optionLabel="email" display="chip"
+                        placeholder="Select Members" className={classNames({ 'p-invalid': submitted && !project.participantsIds.length != 0 })} />
+                    {submitted && !project.participantsIds.length != 0 && <small className="p-invalid text-red-500">Select at least one member.</small>}
 
                 </div>
             </div>
@@ -293,9 +268,9 @@ const AdminProjects = () => {
                 </div>
 
                 <div className="field lg:col-6">
-                    <MultiSelect value={project.members} onChange={(e) => onInputChange(e, 'members')} options={projectsStore.users} optionLabel="email" display="chip"
-                        placeholder="Select Members" className={classNames({ 'p-invalid': submitted && !project.members.length != 0 })} />
-                    {submitted && !project.members.length != 0 && <small className="p-invalid text-red-500">Select at least one member.</small>}
+                    <MultiSelect value={project.participantsIds} onChange={(e) => onInputChange(e, 'participantsIds')} options={projectsStore.users} optionLabel="email" display="chip"
+                        placeholder="Select Members" className={classNames({ 'p-invalid': submitted && !project.participantsIds.length != 0 })} />
+                    {submitted && !project.participantsIds.length != 0 && <small className="p-invalid text-red-500">Select at least one member.</small>}
 
                 </div>
             </div>
@@ -350,31 +325,31 @@ const AdminProjects = () => {
                             rowsPerPageOptions={[5, 10, 25]}
                             className="datatable-responsive lg:w-full md:w-full w-19rem"
                             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-                            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products"
+                            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} Projects"
                             globalFilter={globalFilter}
-                            emptyMessage="No products found."
+                            emptyMessage="No Projects found."
                             header={header}
                             responsiveLayout="scroll"
                         >
                             <Column field="name" header="Name" sortable body={nameBodyTemplate} headerStyle={{ minWidth: '15rem' }}></Column>
                             <Column field="description" header="Description" body={descBodyTemplate} sortable></Column>
-                            <Column field="members" header="Members" body={membersBodyTemplate} sortable headerStyle={{ minWidth: '10rem' }}></Column>
+                            <Column field="members" header="Members" body={membersBodyTemplate}  headerStyle={{ minWidth: '10rem' }}></Column>
                             <Column body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
                         </DataTable>
 
-                        <Dialog visible={projectDialog} style={{ width: '750px' }} header="Add new project" modal className="p-fluid" footer={productDialogFooter} onHide={hideDialog}>
+                        <Dialog visible={projectDialog} style={{ width: '750px' }} header="Add new project" modal className="p-fluid" footer={projectDialogFooter} onHide={hideDialog}>
                             {addProjectCode()}
 
                         </Dialog>
-                        <Dialog visible={editprojectDialog} style={{ width: '750px' }} header="Add new project" modal className="p-fluid" footer={editproductDialogFooter} onHide={hideDialog}>
+                        <Dialog visible={editprojectDialog} style={{ width: '750px' }} header="Add new project" modal className="p-fluid" footer={editprojectDialogFooter} onHide={hideDialog}>
                             {editProjectCode()}
 
                         </Dialog>
 
-                        <Dialog visible={deleteProjectDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteProductDialogFooter} onHide={hideDeleteProductDialog}>
+                        <Dialog visible={deleteProjectDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteProjectDialogFooter} onHide={hideDeleteProjectDialog}>
                             <div className="flex align-items-center justify-content-center">
                                 <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
-                                {product && (
+                                {project && (
                                     <span>
                                         Are you sure you want to delete <b>{project.name}</b>?
                                     </span>
@@ -382,10 +357,10 @@ const AdminProjects = () => {
                             </div>
                         </Dialog>
 
-                        <Dialog visible={deleteProjectsDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteProductsDialogFooter} onHide={hideDeleteProductsDialog}>
+                        <Dialog visible={deleteProjectsDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteProjectsDialogFooter} onHide={hideDeleteProjectsDialog}>
                             <div className="flex align-items-center justify-content-center">
                                 <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
-                                {product && <span>Are you sure you want to delete the selected products?</span>}
+                                {project && <span>Are you sure you want to delete the selected projects?</span>}
                             </div>
                         </Dialog>
                     </div>
