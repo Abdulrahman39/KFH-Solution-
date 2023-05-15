@@ -153,6 +153,16 @@ const FormLayoutDemo = () => {
         console.log(releaseObj);
         projectsStore.formData.append("release", JSON.stringify(releaseObj));
         await projectsStore.createRelease();
+
+        setName('');
+        setVersion('');
+        setPlatform('');
+        setSit('');
+        setDescription('');
+        projectsStore.formData.delete('release');
+        projectsStore.formData.delete('file1');
+        projectsStore.formData.delete('file2');
+
         router.push('/releases');
     };
 

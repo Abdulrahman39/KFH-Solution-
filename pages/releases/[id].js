@@ -176,11 +176,11 @@ const TableDemo = () => {
         if (rowData.releaseFilesList.length === 2) {
             for (let i = 0; i < rowData.releaseFilesList.length; i++) {
                 if (rowData.releaseFilesList[i].filename.endsWith(".plist")) {
-                    url = `itms-services://?action=download-manifest&url=http://localhost:8080${rowData.releaseFilesList[0].filename.substring(rowData.releaseFilesList[0].filename.indexOf("/uploads"), rowData.releaseFilesList[0].filename.length)}`;
+                    url = `itms-services://?action=download-manifest&url=http://localhost:8080${rowData.releaseFilesList[i].path}`;
                 }
             }
         } else
-            url = `http://localhost:8080${rowData.releaseFilesList[0].filename.substring(rowData.releaseFilesList[0].filename.indexOf("/uploads"), rowData.releaseFilesList[0].filename.length)}`;
+            url = `http://localhost:8080${rowData.releaseFilesList[0].path}`;
 
         return <a href={url}>
             <i className='text-gray-700 text-3xl pi pi-cloud-download'></i>
