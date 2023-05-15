@@ -163,6 +163,7 @@ const FormLayoutDemo = () => {
         projectsStore.formData.delete('file1');
         projectsStore.formData.delete('file2');
 
+        await projectsStore.getProject();
         router.push('/releases');
     };
 

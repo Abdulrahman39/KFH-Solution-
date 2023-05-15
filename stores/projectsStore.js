@@ -80,6 +80,26 @@ class ProjectsStore {
         }
     };
 
+    editProject = async (projectID, project) => {
+        try {
+            const res = await instance.put(`project/${projectID}`, project);
+            console.log(res);
+            await this.getProject();
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    deleteProject = async (projectID) => {
+        try {
+            const res = await instance.delete(`project/${projectID}`);
+            console.log(res);
+            await this.getProject();
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
     addReleases = async () => {
         for (let i = 0; i < this.projects.length; i++) {
             // console.log(this.projects[i]);
