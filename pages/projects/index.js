@@ -1,26 +1,20 @@
-import { Button } from 'primereact/button';
-import { Chart } from 'primereact/chart';
-import { Column } from 'primereact/column';
-import { DataTable } from 'primereact/datatable';
-import { Menu } from 'primereact/menu';
 import { observer } from "mobx-react";
 import { InputText } from 'primereact/inputtext'
-import React, { useContext, useEffect, useRef, useState } from 'react';
-import { ProductService } from '../../demo/service/ProductService';
-import { LayoutContext } from '../../layout/context/layoutcontext';
-import Link from 'next/link';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from "next/router";
 import ProjectCard from "./components/ProjectCard";
 import projectsStore from "../../stores/projectsStore";
 import { ProgressSpinner } from 'primereact/progressspinner';
+import authStore from "../../stores/authStore";
 
 
 
-const Dashboard = () => {
+const Dashboard = (context) => {
     const [globalSearch, setGlobalSearch] = useState('')
 
 
     const rand = mulberry32(124243715);
+    const router = useRouter();
 
 
     function mulberry32(a) {
@@ -37,18 +31,22 @@ const Dashboard = () => {
         return backgroundCss;
     }
 
-    let projectsCards = projectsStore.projects.map(p => (<ProjectCard key={p.name} {...{...p, color: RandomColor()}}  />));
+    // let projectsCards = projectsStore.projects.map(p => (<ProjectCard key={p.name} {...{...p, color: RandomColor()}}  />));
 
-    // useEffect(async () => {
-    //     await projectsStore.getProject()
-    //    let projectsCards = projectsStore.projects.map(p => (<ProjectCard key={p.name} {...{...p, color: RandomColor()}} />));
-    // }, []);
+    useEffect( () => {
+        const refresh = async () => {
+            console.log(localStorage.getItem("fromLogin"));
 
+            if (localStorage.getItem("fromLogin") === 'true') {
+                console.log('FML');
+                await authStore.refresh();
+            }
 
+            // console.log(authStore.redirected);
+        };
 
-
-
-
+        refresh();
+    }, []);
 
     return (
         <div className='m-4'>
@@ -61,7 +59,7 @@ const Dashboard = () => {
             </div>
             <div className="grid">
                 {!projectsStore.projectsLoaded && <ProgressSpinner />}
-                {projectsStore.projectsLoaded && projectsCards}
+                {projectsStore.projectsLoaded && projectsStore.projects.map(p => (<ProjectCard key={p.name} {...{...p, color: RandomColor()}}  />))}
             </div>
         </div>
     );

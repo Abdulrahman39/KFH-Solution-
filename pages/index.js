@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import React, { useContext, useState } from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import AppConfig from '../layout/AppConfig';
 import { Checkbox } from 'primereact/checkbox';
 import { Button } from 'primereact/button';
@@ -8,6 +8,7 @@ import { LayoutContext } from '../layout/context/layoutcontext';
 import { InputText } from 'primereact/inputtext';
 import { classNames } from 'primereact/utils';
 import newAuthStore from "../stores/authStore";
+import authStore from "../stores/authStore";
 
 const LoginPage = () => {
     const [password, setPassword] = useState('');
@@ -18,12 +19,17 @@ const LoginPage = () => {
     const router = useRouter();
     const containerClassName = classNames('surface-ground flex align-items-center justify-content-center min-h-screen min-w-screen overflow-hidden', { 'p-input-filled': layoutConfig.inputStyle === 'filled' });
 
+    useEffect(() => {
+        authStore.logout();
+    }, []);
+
     const handleClick = async () => {
         console.log({email, password});
-        const res = await newAuthStore.login({email, password});
 
-        if (res !== "")
-            await router.push('/projects');
+        await newAuthStore.checkLogin({email, password});
+        router.push('/projects');
+
+        await newAuthStore.login();
     };
 
     return (

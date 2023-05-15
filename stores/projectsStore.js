@@ -15,6 +15,8 @@ class ProjectsStore {
     }
 
     getProject = async () => {
+        this.projectsLoaded = false;
+
         try {
             const res = await instance.get("project/");
             // console.log(res);

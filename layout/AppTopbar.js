@@ -17,7 +17,7 @@ const AppTopbar = forwardRef((props, ref) => {
 
     return (
         <div className="layout-topbar ">
-            <Link href="/" className="layout-topbar-logo">
+            <Link href="/projects" className="layout-topbar-logo">
                 {/* <img src={`/layout/images/logo-${layoutConfig.colorScheme !== 'light' ? 'white' : 'dark'}.svg`} width="47.22px" height={'35px'} widt={'true'} alt="logo" /> */}
                 <img src="/layout/images/KFHLOGO.png" width="40px" style={{ borderRadius: "8px" }} height={'40px'} widt={'true'} alt="logo" />
                 <span>KFH</span>
@@ -36,7 +36,7 @@ const AppTopbar = forwardRef((props, ref) => {
                 {/*    <i className="pi pi-calendar"></i>*/}
                 {/*    <span>Calendar</span>*/}
                 {/*</button>*/}
-                <Link href="/" className="">
+                <Link href="/" onClick={() => localStorage.clear()} className="">
                     <button type="button" className="p-link layout-topbar-button"  >
                         <i className="pi pi-sign-out"></i>
                         <span>Profile</span>
