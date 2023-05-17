@@ -3,29 +3,20 @@ import { classNames } from 'primereact/utils';
 import { FilterMatchMode, FilterOperator } from 'primereact/api';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
-import { Dropdown } from 'primereact/dropdown';
-import { InputNumber } from 'primereact/inputnumber';
 import { Button } from 'primereact/button';
 import { ProgressBar } from 'primereact/progressbar';
 import { Calendar } from 'primereact/calendar';
-import { MultiSelect } from 'primereact/multiselect';
-import { Slider } from 'primereact/slider';
-import { TriStateCheckbox } from 'primereact/tristatecheckbox';
-import { ToggleButton } from 'primereact/togglebutton';
-import { Rating } from 'primereact/rating';
-import { CustomerService } from '../../demo/service/CustomerService';
-import { ProductService } from '../../demo/service/ProductService';
 import projectsStore from "../../stores/projectsStore";
 import { Toast } from 'primereact/toast';
-import axios, {Axios} from 'axios'
-import fileDownload from 'js-file-download'
+
+
 
 import { InputText } from 'primereact/inputtext';
 import { useRouter } from "next/router";
-import instance, {url} from "../../stores/instance";
+import instance, { url } from "../../stores/instance";
 import authStore from "../../stores/authStore";
-import {toJS} from "mobx";
-import {observer} from "mobx-react";
+
+import { observer } from "mobx-react";
 
 const TableDemo = () => {
     const toast = useRef(null);
@@ -49,18 +40,50 @@ const TableDemo = () => {
         initFilters1();
     };
     useEffect(() => {
+        const fetchReleaseInfo = async () => {
+            try {
+                const { id } = router.query;
+                if (id) {
+                    const release = await projectsStore.getRelease(id);
+                    setReleaseInfo(release);
+                    setLoading1(false);
+                }
+            } catch (error) {
+                // Handle error if necessary
+                console.log(error);
+            }
+        };
 
-        const releaseID = router.query.id;
-        async function releases() {
-            await authStore.refresh();
-            setReleaseInfo(toJS(await projectsStore.getRelease(releaseID)));
-
+        // Fetch release info only if id is present
+        if (router.query.id) {
+            fetchReleaseInfo();
         }
-        releases();
-        setLoading1(false);
+    }, [router.query.id]);
 
-        initFilters1();
-    }, []);
+    useEffect(() => {
+        // Wait for router.query to be defined before fetching data on initial render
+        const fetchReleaseInfo = async () => {
+            try {
+                const { id } = router.query;
+                if (id) {
+                    const release = await projectsStore.getRelease(id);
+                    setReleaseInfo(release);
+                    setLoading1(false);
+                }
+            } catch (error) {
+                // Handle error if necessary
+                console.log(error);
+            }
+        };
+        if (router.isReady) {
+            const { id } = router.query;
+
+            if (id) {
+                fetchReleaseInfo();
+                initFilters1();
+            }
+        }
+    }, [router.isReady]);
 
     const onGlobalFilterChange1 = (e) => {
         const value = e.target.value;
@@ -199,8 +222,8 @@ const TableDemo = () => {
                 <div className="card">
                     <h5>Releases</h5>
                     <React.Fragment>
-                        {authStore.userLoaded && authStore.user.type !== 'ROLE_TESTER' && <div style={{display: "flex", justifyContent: "flex-end"}} className="mb-5">
-                            <Button icon="pi pi-cloud-upload text-2xl" severity="sucess" onClick={handleUploadRelease}/>
+                        {authStore.userLoaded && authStore.user.type !== 'ROLE_TESTER' && <div style={{ display: "flex", justifyContent: "flex-end" }} className="mb-5">
+                            <Button icon="pi pi-cloud-upload text-2xl" severity="sucess" onClick={handleUploadRelease} />
                         </div>}
                     </React.Fragment>
                     <DataTable

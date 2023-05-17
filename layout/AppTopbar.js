@@ -39,7 +39,7 @@ const AppTopbar = forwardRef((props, ref) => {
                 <Link href="/" onClick={() => localStorage.clear()} className="">
                     <button type="button" className="p-link layout-topbar-button"  >
                         <i className="pi pi-sign-out"></i>
-                        <span>Profile</span>
+                        <span>Logout</span>
                     </button>
                 </Link>
                 {/*<Link href="/documentation">*/}
