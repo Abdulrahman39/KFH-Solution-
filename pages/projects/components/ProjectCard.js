@@ -21,7 +21,7 @@ const ProjectCard = props => {
 
     const header = (
         <div className="flex flex-column pt-1 px-1 lg:px-8 overflow-hidden"
-            style={{ background: props.color, height: '180px', clipPath: 'ellipse(170% 87% at 93% 13%)' }}>
+            style={{ height: '50px', clipPath: 'ellipse(170% 87% at 93% 13%)' }}>
         </div>);
     const footer = (
         <div className="flex flex-wrap justify-content-between gap-2">
@@ -32,7 +32,7 @@ const ProjectCard = props => {
     );
 
     return (
-        <div className=" col justify-content-center " onClick={handleContinue}>
+        <div className=" col lg:col-3 justify-content-center " onClick={handleContinue}>
             <Card title={props.name} subTitle={date.toDateString()} footer={footer} header={header} className="md:w-25rem">
                 <div className="flex justify-content-center mb-2 mt-4">
 

@@ -11,6 +11,7 @@ import authStore from "../../stores/authStore";
 
 const Dashboard = (context) => {
     const [globalSearch, setGlobalSearch] = useState('')
+    let [projects, setProjects] = useState(projectsStore.projects)
 
 
     const rand = mulberry32(124243715);
@@ -31,9 +32,10 @@ const Dashboard = (context) => {
         return backgroundCss;
     }
 
+
     // let projectsCards = projectsStore.projects.map(p => (<ProjectCard key={p.name} {...{...p, color: RandomColor()}}  />));
 
-    useEffect( () => {
+    useEffect(() => {
         const refresh = async () => {
             console.log(localStorage.getItem("fromLogin"));
 
@@ -44,9 +46,27 @@ const Dashboard = (context) => {
 
             // console.log(authStore.redirected);
         };
+                setProjects(projectsStore.projects)
 
         refresh();
     }, []);
+
+    function filter(value) {
+        setGlobalSearch(value);
+        if (value != '') {
+            const filteredProjects = projects.filter((project) =>
+                project.name.toLowerCase().includes(value.toLowerCase())
+            );
+            setProjects(filteredProjects);
+        }
+        else{
+            setProjects(projectsStore.projects)
+        }
+        
+    }
+
+
+
 
     return (
         <div className='m-4'>
@@ -54,12 +74,13 @@ const Dashboard = (context) => {
                 <h1>Dashboard</h1>
                 <span className="p-input-icon-left align-self-center">
                     <i className="pi pi-search" />
-                    <InputText type="search" onChange={(e) => setGlobalSearch(e.target.value)} placeholder="Search..." />
+                    <InputText type="search" onChange={(e) => filter(e.target.value)} placeholder="Search..." />
                 </span>
             </div>
-            <div className="grid">
-                {!projectsStore.projectsLoaded && <ProgressSpinner />}
-                {projectsStore.projectsLoaded && projectsStore.projects.map(p => (<ProjectCard key={p.name} {...{...p, color: RandomColor()}}  />))}
+            <div className="grid col ">
+                {/* {!projectsStore.projectsLoaded && <ProgressSpinner />}
+                {projectsStore.projectsLoaded && projectsStore.projects.map(p => (<ProjectCard key={p.name} {...p}  />))} */}
+                {projects.map(p => (<ProjectCard key={p.name} {...p} />))}
             </div>
         </div>
     );
