@@ -39,7 +39,6 @@ const Dashboard = (context) => {
             console.log(localStorage.getItem("fromLogin"));
 
             if (localStorage.getItem("fromLogin") === 'true') {
-                console.log('FML');
                 await authStore.refresh();
             }
 
@@ -47,6 +46,7 @@ const Dashboard = (context) => {
         };
 
         refresh();
+        localStorage.setItem('prevPage', 'Projects');
     }, []);
 
 

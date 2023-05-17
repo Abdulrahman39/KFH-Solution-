@@ -103,7 +103,7 @@ const Layout = (props) => {
     return (
         <React.Fragment>
             <Head>
-                <title>Sakai by PrimeReact | Free Admin Template for NextJS</title>
+                <title>KFH - SARD</title>
                 <meta charSet="UTF-8" />
                 <meta name="description" content="The ultimate collection of design-agnostic, flexible and accessible React UI Components." />
                 <meta name="robots" content="index, follow" />
@@ -117,7 +117,7 @@ const Layout = (props) => {
                 <link rel="icon" href={`/favicon.ico`} type="image/x-icon"></link>
             </Head>
 
-            <div className={containerClass}>
+            <div className={containerClass} suppressHydrationWarning>
                 <AppTopbar ref={topbarRef} />
                 <div ref={sidebarRef} className="layout-sidebar">
                     <AppSidebar />

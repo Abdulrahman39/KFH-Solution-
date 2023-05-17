@@ -242,7 +242,7 @@ const AdminProjects = () => {
                 </div>
 
                 <div className="field lg:col-6">
-                    <MultiSelect value={project.participantsIds} onChange={(e) => onInputChange(e, 'participantsIds')} options={projectsStore.users} optionLabel="email" display="chip"
+                    <MultiSelect value={project.participantsIds} onChange={(e) => onInputChange(e, 'participantsIds')} options={projectsStore.users} optionLabel="firstName" display="chip"
                         placeholder="Select Members" className={classNames({ 'p-invalid': submitted && !project.participantsIds.length != 0 })} />
                     {submitted && !project.participantsIds.length != 0 && <small className="p-invalid text-red-500">Select at least one member.</small>}
 

@@ -12,6 +12,7 @@ const ProjectCard = props => {
     const handleContinue = async () => {
         projectsStore.currentProject = { ...props };
         await projectsStore.getRelease(props.id)
+        localStorage.setItem('prevPage', 'Projects');
         router.push(`/releases/${props.id}`);
     };
     const date = new Date(props.created_at)

@@ -33,7 +33,7 @@ const LoginPage = () => {
     };
 
     return (
-        <div className={containerClassName}>
+        <div className={containerClassName} suppressHydrationWarning>
             <div className="flex flex-column align-items-center justify-content-center">
                 <img src={`/layout/images/KFHLOGO.png`} alt="Sakai logo" className="mb-5 w-6rem flex-shrink-0" style={{borderRadius: '20px'}} />
                 <div style={{ borderRadius: '56px', padding: '0.3rem', background: 'linear-gradient(180deg, var(--primary-color) 10%, rgba(33, 150, 243, 0) 30%)' }}>

@@ -49,6 +49,12 @@ const TableDemo = () => {
         initFilters1();
     };
     useEffect(() => {
+        if (localStorage.getItem('prevPage') === 'Projects')
+            localStorage.setItem('prevPage', 'Releases');
+        else {
+            projectsStore.projectsLoaded = false;
+            router.push('/projects');
+        }
 
         const releaseID = router.query.id;
         async function releases() {
@@ -58,7 +64,6 @@ const TableDemo = () => {
         }
         releases();
         setLoading1(false);
-
         initFilters1();
     }, []);
 

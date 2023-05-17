@@ -9,11 +9,13 @@ class AuthStore {
     token = null;
     user = null;
     userLoaded = false;
+    theme = 'light';
 
     constructor() {
         makeObservable(this, {
             user: observable,
-            userLoaded: observable
+            userLoaded: observable,
+            theme: observable
         });
     };
 

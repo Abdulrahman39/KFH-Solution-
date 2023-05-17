@@ -7,8 +7,12 @@ import authStore from "../stores/authStore";
 import {observer} from "mobx-react";
 
 const AppMenu = () => {
-    useEffect( async () => {
-        await authStore.refresh();
+    useEffect( () => {
+        const refresh = async () => {
+            await authStore.refresh();
+        }
+
+        refresh();
     }, [])
 
     const adminModel = [

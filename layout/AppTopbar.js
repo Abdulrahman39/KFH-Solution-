@@ -1,13 +1,18 @@
 import Link from 'next/link';
 import { classNames } from 'primereact/utils';
-import React, { forwardRef, useContext, useImperativeHandle, useRef } from 'react';
+import React, {forwardRef, useContext, useEffect, useImperativeHandle, useRef} from 'react';
 import { LayoutContext } from './context/layoutcontext';
+import {useRouter} from "next/router";
+import authStore from "../stores/authStore";
+import {observer} from "mobx-react";
 
 const AppTopbar = forwardRef((props, ref) => {
     const { layoutConfig, layoutState, onMenuToggle, showProfileSidebar } = useContext(LayoutContext);
     const menubuttonRef = useRef(null);
     const topbarmenuRef = useRef(null);
     const topbarmenubuttonRef = useRef(null);
+
+    const router = useRouter();
 
     useImperativeHandle(ref, () => ({
         menubutton: menubuttonRef.current,
@@ -32,25 +37,21 @@ const AppTopbar = forwardRef((props, ref) => {
             </button>
 
             <div ref={topbarmenuRef} className={classNames('layout-topbar-menu', { 'layout-topbar-menu-mobile-active': layoutState.profileSidebarVisible })}>
-                {/*<button type="button" className="p-link layout-topbar-button">*/}
-                {/*    <i className="pi pi-calendar"></i>*/}
-                {/*    <span>Calendar</span>*/}
-                {/*</button>*/}
-                <Link href="/" onClick={() => localStorage.clear()} className="">
+                <button type="button" className="p-link layout-topbar-button">
+                    <i id='themeIcon' className="pi pi-moon" onClick={() => {
+                        authStore.theme = authStore.theme === 'light' ? 'dark' : 'light';
+                        document.getElementById('themeIcon').className = authStore.theme === 'light' ? 'pi pi-moon' : 'pi pi-sun';
+                        document.getElementById('theme-css').href = `/themes/lara-${authStore.theme}-teal/theme.css`;
+                    }}></i>
+                </button>
+                <Link href='/' className="">
                     <button type="button" className="p-link layout-topbar-button"  >
                         <i className="pi pi-sign-out"></i>
-                        <span>Profile</span>
                     </button>
                 </Link>
-                {/*<Link href="/documentation">*/}
-                {/*    <button type="button" className="p-link layout-topbar-button">*/}
-                {/*        <i className="pi pi-cog"></i>*/}
-                {/*        <span>Settings</span>*/}
-                {/*    </button>*/}
-                {/*</Link>*/}
             </div>
         </div>
     );
 });
 
-export default AppTopbar;
+export default observer(AppTopbar);
