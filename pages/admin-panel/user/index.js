@@ -14,7 +14,7 @@ import { useRouter } from 'next/router';
 import ProjectsStore from '../../../stores/projectsStore';
 
 const User = () => {
- 
+
 
     const [userDialog, setUserDialog] = useState(false);
     const [editUserDialog, setEditUserDialog] = useState(false);
@@ -32,6 +32,7 @@ const User = () => {
         firstName: '',
         lastName: '',
         email: '',
+        password: '',
         department: [],
         type: [],
     }
@@ -43,6 +44,7 @@ const User = () => {
         async function ListUsers() {
             await ProjectsStore.getUsers().then((res) => {
                 setUsersInfo(res);
+                setUser(emptyuser)
                 setLoading1(false)
             })
         }
@@ -90,10 +92,14 @@ const User = () => {
         if (checkUserInfo()) {
             let data = user;
             data.department = data.department.name;
-            data.type = data.type[0].code;
+            data.type = data.type.code;
             console.log({ ...data });
             await ProjectsStore.createUser({ ...data }).then(() => {
                 toast.current.show({ severity: 'success', summary: 'Successful', detail: `'User Created'`, life: 3000 });
+                setUser(emptyuser);
+                hideDialog();
+                setSubmitted(false);
+                setUsersInfo(ProjectsStore.getUsers())
             })
         }
 
@@ -105,24 +111,24 @@ const User = () => {
     };
 
     const editSubmitted = async () => {
-        let data ={
+        let data = {
             firstName: user.firstName,
             lastName: user.lastName,
             department: user.department.name,
             type: user.type.code
-        } 
+        }
         await ProjectsStore.editUser(user.id, data);
     };
 
-    const confirmDeleteUser = async (User) => {
+    const confirmDeleteUser =  (User) => {
         setUser(User)
         setDeleteUserDialog(true);
         console.log(User, user)
-        await ProjectsStore.deleteUser(User.id)
     };
 
-    const deleteUser = () => {
+    const deleteUser = async () => {
         let _users = usersInfo.filter((val) => val.id !== user.id);
+        await ProjectsStore.deleteUser(User.id)
         setUsersInfo(_users);
         setDeleteUserDialog(false);
         setUser(emptyuser);
@@ -151,7 +157,7 @@ const User = () => {
 
 
 
-   
+
 
 
     const leftToolbarTemplate = () => {
@@ -306,23 +312,29 @@ const User = () => {
                         <InputText id="email" placeholder='Email' type='email' value={user.email} onChange={(e) => onInputChange(e, 'email')} required autoFocus className={classNames({ 'p-invalid': submitted && !user.email })} />
                         {submitted && !user.email && <small className="p-invalid text-red-500">Email is required.</small>}
                     </div>
-
                     <div className="field col-6 ">
-                        <label htmlFor="department">Department</label>
-                        <Dropdown value={user.department} onChange={(e) => onInputChange(e, 'department')} options={departments} optionLabel="name"
-                            placeholder="Select Department" className={classNames({ 'p-invalid': submitted && user.department.length == 0 })} />
-                        {submitted && user.department.length == 0 && <small className="p-invalid text-red-500">Department is required.</small>}
+                        <label htmlFor="email">Password</label>
+                        <InputText id="password" placeholder='Password' type='password' value={user.password} onChange={(e) => onInputChange(e, 'password')} required autoFocus className={classNames({ 'p-invalid': submitted && !user.password })} />
+                        {submitted && !user.password && <small className="p-invalid text-red-500">Password is required.</small>}
                     </div>
 
+
+
+                </div>
+                <div className="field col ">
+                    <label htmlFor="department">Department</label>
+                    <Dropdown value={user.department} onChange={(e) => onInputChange(e, 'department')} options={departments} optionLabel="name"
+                        placeholder="Select Department" className={classNames({ 'p-invalid': submitted && user.department.length == 0 })} />
+                    {submitted && user.department.length == 0 && <small className="p-invalid text-red-500">Department is required.</small>}
                 </div>
 
                 {/* roles */}
                 <h4 className='col-12'>Roles</h4>
-                <div className="field col-6 ">
+                <div className="field col-12 ">
                     <label>User's roles</label>
-                    <MultiSelect value={user.type} maxSelectedLabels={1} options={Roles} optionLabel="name" display="chip" onChange={(e) => onInputChange(e, 'type')}
-                        placeholder="Select Roles" className={classNames({ 'p-invalid': submitted && user.type.length == 0 })} />
-                    {!submitted && <small className=' text-color-secondary'>User can have one or more roles</small>}
+                    <Dropdown value={user.type} maxSelectedLabels={1} options={Roles} optionLabel="name" display="chip" onChange={(e) => onInputChange(e, 'type')}
+                        placeholder="Select Role" className={classNames({ 'p-invalid': submitted && user.type.length == 0 })} />
+                    {/* {!submitted && <small className=' text-color-secondary'>User can have one or more roles</small>} */}
                     {submitted && user.type.length == 0 && <small className="p-invalid text-red-500">Select at least one role.</small>}
 
                 </div>
@@ -400,7 +412,7 @@ const User = () => {
 
             <div className="grid  mt-5 ">
 
-                <div className='m-5 w-full  lg:w-17rem'>
+                <div className='m-5 w-full  xl:w-17rem'>
                     <p className='text-center text-xl col-12'>Administration panel</p>
 
                     <div className='col-12 flex justify-content-center align-content-center text-center w-full'>
@@ -409,7 +421,7 @@ const User = () => {
 
 
                 </div>
-                <Divider layout='vertical' className='hidden lg:block' />
+                <Divider layout='vertical' className='hidden xl:block' />
 
                 <div className="col">
                     <div className='flex justify-content-between'>
@@ -463,7 +475,7 @@ const User = () => {
                                 <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
                                 {user && (
                                     <span>
-                                        Are you sure you want to delete <b>{user.name}</b>?
+                                        Are you sure you want to delete <b>{user.firstName + " " + user.lastName}</b>?
                                     </span>
                                 )}
                             </div>

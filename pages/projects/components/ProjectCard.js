@@ -32,8 +32,8 @@ const ProjectCard = props => {
     );
 
     return (
-        <div className=" col lg:col-3 justify-content-center " onClick={handleContinue}>
-            <Card title={props.name} subTitle={date.toDateString()} footer={footer} header={header} className="md:w-25rem">
+        <div className="col sm:col-12 md:col-6  lg:col-4 xl:col-3 justify-content-center " onClick={handleContinue}>
+            <Card title={props.name} subTitle={date.toDateString()} footer={footer} header={header} className="">
                 <div className="flex justify-content-center mb-2 mt-4">
 
                     <div style={{ marginRight: "50px" }}>

@@ -294,7 +294,7 @@ const AdminProjects = () => {
 
             <div className="grid  mt-5  ">
 
-                <div className='m-5 w-full  lg:w-17rem'>
+                <div className='m-5 w-full  xl:w-17rem'>
                     <p className='text-center text-xl col-12'>Administration panel</p>
 
                     <div className='col-12 flex justify-content-center align-content-center text-center w-full'>
@@ -303,7 +303,7 @@ const AdminProjects = () => {
 
 
                 </div>
-                <Divider layout='vertical' className='hidden lg:block' />
+                <Divider layout='vertical' className='hidden xl:block' />
 
                 <div className="col">
                     <div className='flex justify-content-between'>

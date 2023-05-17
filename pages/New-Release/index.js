@@ -209,8 +209,8 @@ const FormLayoutDemo = () => {
                         </div>
                         <div className="field col-12" style={{ display: "flex", justifyContent: "flex-end" }}>
                             <React.Fragment>
-                                <div style={{ width: "13%" }}>
-                                    <Button label="Upload Release" icon="pi pi-cloud-upload" severity="sucess" className="mr-2" onClick={handleUploadRelease} />
+                                <div >
+                                    <Button label="" icon="pi pi-cloud-upload"  className=" lg:mr-2" onClick={handleUploadRelease} />
                                 </div>
                             </React.Fragment>
                         </div>
