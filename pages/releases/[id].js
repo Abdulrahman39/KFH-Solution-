@@ -22,7 +22,10 @@ import fileDownload from 'js-file-download'
 
 import { InputText } from 'primereact/inputtext';
 import { useRouter } from "next/router";
-import instance from "../../stores/instance";
+import instance, {url} from "../../stores/instance";
+import authStore from "../../stores/authStore";
+import {toJS} from "mobx";
+import {observer} from "mobx-react";
 
 const TableDemo = () => {
     const toast = useRef(null);
@@ -49,15 +52,12 @@ const TableDemo = () => {
 
         const releaseID = router.query.id;
         async function releases() {
-            await projectsStore.getRelease(releaseID).then((res) => {
-                setReleaseInfo(res);
-                setLoading1(false);
-                console.log('idddddddddddddddddddddd', releaseID)
-
-            })
+            await authStore.refresh();
+            setReleaseInfo(toJS(await projectsStore.getRelease(releaseID)));
 
         }
         releases();
+        setLoading1(false);
 
         initFilters1();
     }, []);
@@ -172,17 +172,17 @@ const TableDemo = () => {
         }
     };
     const verifiedBodyTemplate = (rowData) => {
-        let url = '';
+        let _url = '';
         if (rowData.releaseFilesList.length === 2) {
             for (let i = 0; i < rowData.releaseFilesList.length; i++) {
                 if (rowData.releaseFilesList[i].filename.endsWith(".plist")) {
-                    url = `itms-services://?action=download-manifest&url=http://localhost:8080${rowData.releaseFilesList[i].path}`;
+                    _url = `itms-services://?action=download-manifest&url=http://${url}:8080${rowData.releaseFilesList[i].path}`;
                 }
             }
         } else
-            url = `http://localhost:8080${rowData.releaseFilesList[0].path}`;
+            _url = `http://${url}:8080${rowData.releaseFilesList[0].path}`;
 
-        return <a href={url}>
+        return <a href={_url}>
             <i className='text-gray-700 text-3xl pi pi-cloud-download'></i>
         </a>;
     };
@@ -199,9 +199,9 @@ const TableDemo = () => {
                 <div className="card">
                     <h5>Releases</h5>
                     <React.Fragment>
-                        <div style={{ display: "flex", justifyContent: "flex-end" }} className="mb-5">
-                            <Button icon="pi pi-cloud-upload text-2xl" severity="sucess" onClick={handleUploadRelease} />
-                        </div>
+                        {authStore.userLoaded && authStore.user.type !== 'ROLE_TESTER' && <div style={{display: "flex", justifyContent: "flex-end"}} className="mb-5">
+                            <Button icon="pi pi-cloud-upload text-2xl" severity="sucess" onClick={handleUploadRelease}/>
+                        </div>}
                     </React.Fragment>
                     <DataTable
                         value={releaseInfo}
@@ -240,4 +240,4 @@ const TableDemo = () => {
     );
 };
 
-export default TableDemo;
+export default observer(TableDemo);

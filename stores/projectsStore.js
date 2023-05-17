@@ -1,5 +1,5 @@
 import instance from "./instance";
-import { makeAutoObservable, makeObservable, observable } from "mobx";
+import {makeAutoObservable, toJS} from "mobx";
 import { console } from "next/dist/compiled/@edge-runtime/primitives/console";
 import FormData from 'form-data';
 
@@ -33,7 +33,8 @@ class ProjectsStore {
         try {
             const res = await instance.get("user/");
             // console.log(res);
-            this.users = res
+            this.users = toJS(res);
+            console.log(this.users);
             return res;
         } catch (error) {
             console.error(error);

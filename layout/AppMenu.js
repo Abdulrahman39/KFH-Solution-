@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, {useContext, useEffect} from 'react';
 import AppMenuitem from './AppMenuitem';
 import { LayoutContext } from './context/layoutcontext';
 import { MenuProvider } from './context/menucontext';
@@ -7,6 +7,10 @@ import authStore from "../stores/authStore";
 import {observer} from "mobx-react";
 
 const AppMenu = () => {
+    useEffect( async () => {
+        await authStore.refresh();
+    }, [])
+
     const adminModel = [
         {
             label: 'Home',

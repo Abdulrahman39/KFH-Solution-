@@ -1,7 +1,8 @@
 import axios from "axios";
+export const  url = '10.0.174.25';
 
 const instance = axios.create({
-    baseURL: "http://localhost:8080/",
+    baseURL: `http://${url}:8080/`,
     headers: {
         "mode": "no-cors",
     },
