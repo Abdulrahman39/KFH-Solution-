@@ -95,7 +95,7 @@ const User = () => {
             data.type = data.type.code;
             console.log({ ...data });
             await ProjectsStore.createUser({ ...data }).then(() => {
-                toast.current.show({ severity: 'success', summary: 'Successful', detail: `'User Created'`, life: 3000 });
+                toast.current.show({ severity: 'success', summary: 'Successful', detail: `'User Edited'`, life: 3000 });
                 setUser(emptyuser);
                 hideDialog();
                 setSubmitted(false);
@@ -117,7 +117,11 @@ const User = () => {
             department: user.department.name,
             type: user.type.code
         }
-        await ProjectsStore.editUser(user.id, data);
+        await ProjectsStore.editUser(user.id, data).then(()=>{
+            toast.current.show({ severity: 'success', summary: 'Successful', detail: `'User Created'`, life: 3000 });
+            setUser(emptyuser);
+            hideDialog()
+        });
     };
 
     const confirmDeleteUser =  (User) => {
