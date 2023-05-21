@@ -8,6 +8,7 @@ import { InputText } from 'primereact/inputtext';
 import { classNames } from 'primereact/utils';
 import newAuthStore from "../stores/authStore";
 import authStore from "../stores/authStore";
+import {Avatar} from 'primereact/avatar'
 
 const LoginPage = () => {
     const [password, setPassword] = useState('');
@@ -33,11 +34,11 @@ const LoginPage = () => {
     return (
         <div className={containerClassName} suppressHydrationWarning>
             <div className="flex flex-column align-items-center justify-content-center">
-                <img src={`/layout/images/KFHLOGO.png`} alt="Sakai logo" className="mb-5 w-6rem flex-shrink-0" style={{borderRadius: '20px'}} />
+                <img src={`/layout/images/KFHLOGO.png`} alt="SARD logo" className="mb-5 w-6rem flex-shrink-0" style={{borderRadius: '20px'}} />
                 <div style={{ borderRadius: '56px', padding: '0.3rem', background: 'linear-gradient(180deg, var(--primary-color) 10%, rgba(33, 150, 243, 0) 30%)' }}>
                     <div className="w-full surface-card py-8 px-5 sm:px-8" style={{ borderRadius: '53px' }}>
                         <div className="text-center mb-5">
-                            <img src="/demo/images/login/avatar.png" alt="Image" height="50" className="mb-3" />
+                        <Avatar icon="pi pi-user" className="mr-2" size="xlarge" shape="circle" />
                             <div className="text-900 text-3xl font-medium mb-3">Welcome!</div>
                             <span className="text-600 font-medium">Sign in to continue</span>
                         </div>
