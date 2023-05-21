@@ -1,7 +1,6 @@
 import { useRouter } from 'next/router';
 import React, {useContext, useEffect, useState} from 'react';
 import AppConfig from '../layout/AppConfig';
-import { Checkbox } from 'primereact/checkbox';
 import { Button } from 'primereact/button';
 import { Password } from 'primereact/password';
 import { LayoutContext } from '../layout/context/layoutcontext';
@@ -24,7 +23,6 @@ const LoginPage = () => {
     }, []);
 
     const handleClick = async () => {
-        // console.log({email, password});
 
         await newAuthStore.checkLogin({email, password});
         router.push('/projects');
@@ -56,10 +54,7 @@ const LoginPage = () => {
                             <Password inputid="password1" value={password} onChange={(e) => setPassword(e.target.value)} feedback={false} placeholder="Password" toggleMask className="w-full mb-5" inputClassName="w-full p-3 md:w-30rem"></Password>
 
                             <div className="flex align-items-center justify-content-between mb-5 gap-5">
-                                {/*<div className="flex align-items-center">*/}
-                                {/*    <Checkbox inputid="rememberme1" checked={checked} onChange={(e) => setChecked(e.checked)} className="mr-2"></Checkbox>*/}
-                                {/*    <label htmlFor="rememberme1">Remember me</label>*/}
-                                {/*</div>*/}
+
                             </div>
                             <Button label="Sign In" className="w-full p-3 text-xl" onClick={handleClick}></Button>
                         </div>

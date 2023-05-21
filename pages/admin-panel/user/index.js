@@ -8,7 +8,6 @@ import { Dropdown } from 'primereact/dropdown'
 import { classNames } from 'primereact/utils';
 import React, { useEffect, useRef, useState } from 'react';
 import { Divider } from 'primereact/divider';
-import { MultiSelect } from 'primereact/multiselect';
 import { Menu } from 'primereact/menu';
 import { useRouter } from 'next/router';
 import ProjectsStore from '../../../stores/projectsStore';
@@ -80,11 +79,9 @@ const User = () => {
 
     const checkUserInfo = () => {
         if (user.firstName === '' || user.email === '' || user.department.length === 0 || user.type.length === 0) {
-            // console.log("FALSE!!!");
             return false;
         }
         else {
-            // console.log("TRUUUUE!!!");
             return true;
         }
     }
@@ -128,7 +125,6 @@ const User = () => {
     const confirmDeleteUser =  (User) => {
         setUser(User)
         setDeleteUserDialog(true);
-        // console.log(User, user)
     };
 
     const deleteUser = async () => {
@@ -277,7 +273,6 @@ const User = () => {
     // to set data to any feild 
     const onInputChange = (e, name) => {
         let val = (e.target && e.target.value) || '';
-        // console.log(val)
         let _user = { ...user };
 
         _user[`${name}`] = val;
@@ -388,7 +383,6 @@ const User = () => {
 
                 </div>
 
-                {/* roles */}
                 <h4 className='col-12'>Roles</h4>
                 <div className="field col-6 ">
                     <label>${"User\'s roles"}</label>
@@ -455,7 +449,6 @@ const User = () => {
                             header={header}
                             responsiveLayout="scroll"
                         >
-                            {/* <Column selectionMode="multiple" headerStyle={{ width: '4rem' }}></Column> */}
                             <Column header="Name" sortable body={nameBodyTemplate}></Column>
                             <Column header="Email Address" sortable body={EmailBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
                             <Column header="Roles" body={RolesBodyTemplate} headerStyle={{ minWidth: '10rem' }} sortable></Column>

@@ -160,7 +160,6 @@ const AdminProjects = () => {
         
         }
 
-        // console.log(Array.isArray(rowData.participants), Array.isArray(rowData.participants) ? rowData.participants : rowData.participants, users.length)
         return (
             <>
                 <AvatarGroup>

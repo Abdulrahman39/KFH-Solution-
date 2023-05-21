@@ -3,8 +3,8 @@ import { Button } from "primereact/button";
 import { useRouter } from "next/router";
 import { Card } from 'primereact/card'
 import projectsStore from "../../../stores/projectsStore";
-import {toJS} from "mobx";
-import {observer} from "mobx-react";
+import { toJS } from "mobx";
+import { observer } from "mobx-react";
 import authStore from "../../../stores/authStore";
 
 const ProjectCard = props => {
@@ -15,18 +15,20 @@ const ProjectCard = props => {
         localStorage.setItem('prevPage', 'Projects');
         router.push(`/releases/${props.id}`);
     };
-    const date = new Date(props.created_at)
 
+    const date = new Date(props.created_at)
     const iOS = toJS(props.iOS);
     const Android = toJS(props.Android);
 
     const header = (
         <div className="flex flex-column pt-1 px-1 lg:px-8 overflow-hidden"
             style={{ height: '50px', clipPath: 'ellipse(170% 87% at 93% 13%)' }}>
-        </div>);
+        </div>
+    );
+
     const footer = (
         <div className="flex flex-wrap justify-content-between gap-2">
-            {authStore.userLoaded && authStore.user.type === 'ROLE_ADMIN' && <Button label="Delete" icon="pi pi-times" className="p-button-outlined p-button-danger"/>}
+            {authStore.userLoaded && authStore.user.type === 'ROLE_ADMIN' && <Button label="Delete" icon="pi pi-times" className="p-button-outlined p-button-danger" />}
 
             <Button label="Releases" icon="pi pi-arrow-right" iconPos="right" className="p-button-outlined p-button-info" onClick={handleContinue} />
         </div>

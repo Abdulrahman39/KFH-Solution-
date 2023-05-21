@@ -1,25 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { classNames } from 'primereact/utils';
 import { FilterMatchMode, FilterOperator } from 'primereact/api';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
-import { Dropdown } from 'primereact/dropdown';
-import { InputNumber } from 'primereact/inputnumber';
 import { Button } from 'primereact/button';
-import { ProgressBar } from 'primereact/progressbar';
 import { Calendar } from 'primereact/calendar';
-import { MultiSelect } from 'primereact/multiselect';
-import { Slider } from 'primereact/slider';
-import { TriStateCheckbox } from 'primereact/tristatecheckbox';
-import { ToggleButton } from 'primereact/togglebutton';
-import { Rating } from 'primereact/rating';
-import { CustomerService } from '../../demo/service/CustomerService';
-import { ProductService } from '../../demo/service/ProductService';
 import projectsStore from "../../stores/projectsStore";
 import { Toast } from 'primereact/toast';
-import axios, {Axios} from 'axios'
-import fileDownload from 'js-file-download'
-
 import { InputText } from 'primereact/inputtext';
 import { useRouter } from "next/router";
 import instance, {url} from "../../stores/instance";
@@ -34,15 +20,6 @@ const TableDemo = () => {
     const [loading1, setLoading1] = useState(true);
     const [globalFilterValue1, setGlobalFilterValue1] = useState('');
     const [releaseInfo, setReleaseInfo] = useState(null)
-
-    // const download = axios.create({
-    //     baseURL: "http://localhost:8080/",
-    //     headers: {
-    //         "mode": "no-cors",
-    //     },
-    //
-    //
-    // });
 
     const router = useRouter();
     const clearFilter1 = () => {
@@ -152,30 +129,6 @@ const TableDemo = () => {
     };
 
 
-
-    const handleDownload = (rowData) => {
-        // console.log(navigator.userAgent);
-
-        if (navigator.userAgent.indexOf("Mac") !== -1) {
-            // alert("OS: macOS");
-            toast.current.show({ severity: 'info', summary: 'OS', detail: 'macOS', life: 3000 });
-        }
-        else if (navigator.userAgent.indexOf("Windows") !== -1) {
-            // alert("OS: Windows");
-            toast.current.show({ severity: 'info', summary: 'OS', detail: 'Windows', life: 3000 });
-
-        }
-        else if (navigator.userAgent.indexOf("iPhone") !== -1 || navigator.userAgent.indexOf("iPad") !== -1 || navigator.userAgent.indexOf("iPod") !== -1) {
-            // alert("OS: iOS");
-            toast.current.show({ severity: 'info', summary: 'OS', detail: 'ios', life: 3000 });
-
-        }
-        else if (navigator.userAgent.indexOf("Android") !== -1) {
-            // alert("OS: Android");
-            toast.current.show({ severity: 'info', summary: 'OS', detail: 'Andriod', life: 3000 });
-
-        }
-    };
     const verifiedBodyTemplate = (rowData) => {
         let _url = '';
         if (rowData.releaseFilesList.length === 2) {
@@ -225,7 +178,6 @@ const TableDemo = () => {
                             filterMenuStyle={{ width: '14rem' }}
                             style={{ minWidth: '14rem' }}
                             body={developerBodyTemplate}
-                        // filterElement={representativeFilterTemplate}
                         />
                         <Column header="Date" filterField="date" dataType="date" style={{ minWidth: '10rem' }} body={dateBodyTemplate} filterElement={dateFilterTemplate} />
                         <Column header="Description" style={{ minWidth: '10rem' }} body={descriptionBodyTemplate} />

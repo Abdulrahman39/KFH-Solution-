@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 import { InputTextarea } from 'primereact/inputtextarea';
@@ -7,14 +7,10 @@ import { Tooltip } from "primereact/tooltip";
 import { FileUpload } from "primereact/fileupload";
 import { Toast } from "primereact/toast";
 import { Tag } from "primereact/tag";
-import { ProgressBar } from "primereact/progressbar";
 import { useRouter } from "next/router";
 import projectsStore from "../../stores/projectsStore";
-import projectCard from "../projects/components/ProjectCard";
 
 const FormLayoutDemo = () => {
-    const [dropdownItem, setDropdownItem] = useState(null);
-
     const [name, setName] = useState('');
     const [version, setVersion] = useState('');
     const [platform, setPlatform] = useState('');
@@ -34,8 +30,6 @@ const FormLayoutDemo = () => {
             router.push('/projects');
         }
     }, []);
-
-    // const formData = new FormData();
 
     const selectedPlatformTemplate = (option, props) => {
         if (option) {
@@ -70,10 +64,7 @@ const FormLayoutDemo = () => {
 
         let i = 1;
         Object.keys(files).forEach((key) => {
-            // console.log(files[key]);
             projectsStore.formData.append(`file${i}`, files[key]);
-            // console.log(`file${i}`);
-            // console.log(projectsStore.formData.get(`file${i}`));
             _totalSize += files[key].size || 0;
             i++;
         });
@@ -159,7 +150,6 @@ const FormLayoutDemo = () => {
             "platform": platform.name.toUpperCase()
         };
 
-        // console.log(releaseObj);
         projectsStore.formData.append("release", JSON.stringify(releaseObj));
         await projectsStore.createRelease();
 
@@ -211,7 +201,7 @@ const FormLayoutDemo = () => {
                                 <Tooltip target=".custom-choose-btn" content="Choose" position="bottom" />
                                 <Tooltip target=".custom-cancel-btn" content="Clear" position="bottom" />
 
-                                <FileUpload ref={fileUploadRef} name="demo[]" url="/api/upload"  multiple accept="*"
+                                <FileUpload ref={fileUploadRef} name="demo[]" url="/api/upload" multiple accept="*"
                                     onUpload={onTemplateUpload} onSelect={onTemplateSelect} onError={onTemplateClear} onClear={onTemplateClear}
                                     headerTemplate={headerTemplate} itemTemplate={itemTemplate} emptyTemplate={emptyTemplate}
                                     chooseOptions={chooseOptions} cancelOptions={cancelOptions} />
@@ -220,7 +210,7 @@ const FormLayoutDemo = () => {
                         <div className="field col-12" style={{ display: "flex", justifyContent: "flex-end" }}>
                             <React.Fragment>
                                 <div >
-                                    <Button label="" icon="pi pi-cloud-upload"  className=" lg:mr-2" onClick={handleUploadRelease} />
+                                    <Button label="" icon="pi pi-cloud-upload" className=" lg:mr-2" onClick={handleUploadRelease} />
                                 </div>
                             </React.Fragment>
                         </div>
