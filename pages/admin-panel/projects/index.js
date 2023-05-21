@@ -156,11 +156,11 @@ const AdminProjects = () => {
         let users = [];
 
         if (Array.isArray(rowData.participants)) {
-            users = rowData.participants.map(p => <Avatar image='/layout/images/KFHLOGO.png' shape='circle' tooltip={p.firstName}></Avatar>)
+            users = rowData.participants.map(p => <Avatar image='/layout/images/KFHLOGO.png' key={p.id} shape='circle' tooltip={p.firstName}></Avatar>)
         
         }
 
-        console.log(Array.isArray(rowData.participants), Array.isArray(rowData.participants) ? rowData.participants : rowData.participants, users.length)
+        // console.log(Array.isArray(rowData.participants), Array.isArray(rowData.participants) ? rowData.participants : rowData.participants, users.length)
         return (
             <>
                 <AvatarGroup>

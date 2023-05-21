@@ -154,7 +154,7 @@ const TableDemo = () => {
 
 
     const handleDownload = (rowData) => {
-        console.log(navigator.userAgent);
+        // console.log(navigator.userAgent);
 
         if (navigator.userAgent.indexOf("Mac") !== -1) {
             // alert("OS: macOS");
@@ -215,23 +215,19 @@ const TableDemo = () => {
                         showGridlines
                         rows={10}
                         dataKey="id"
-                        filters={filters1}
-                        filterDisplay="menu"
                         loading={loading1}
                         responsiveLayout="scroll"
-                        header={header1}
                     >
                         <Column
-                            header="Developer"
+                            header="Name"
                             filterField="representative"
                             showFilterMatchModes={false}
                             filterMenuStyle={{ width: '14rem' }}
                             style={{ minWidth: '14rem' }}
                             body={developerBodyTemplate}
-                            filter
                         // filterElement={representativeFilterTemplate}
                         />
-                        <Column header="Date" filterField="date" dataType="date" style={{ minWidth: '10rem' }} body={dateBodyTemplate} filter filterElement={dateFilterTemplate} />
+                        <Column header="Date" filterField="date" dataType="date" style={{ minWidth: '10rem' }} body={dateBodyTemplate} filterElement={dateFilterTemplate} />
                         <Column header="Description" style={{ minWidth: '10rem' }} body={descriptionBodyTemplate} />
                         <Column header="SIT Server" style={{ minWidth: '10rem' }} body={sitBodyTemplate} />
                         <Column field="Status" header="Status" filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '12rem' }} body={statusBodyTemplate} />

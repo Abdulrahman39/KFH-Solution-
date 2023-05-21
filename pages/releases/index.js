@@ -238,7 +238,7 @@ const TableDemo = () => {
     };
 
     const handleDownload = () => {
-        console.log(navigator.userAgent);
+        // console.log(navigator.userAgent);
 
         if (navigator.userAgent.indexOf("Mac") !== -1) {
             // alert("OS: macOS");

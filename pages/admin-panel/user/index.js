@@ -22,7 +22,7 @@ const User = () => {
     const [deleteUsersDialog, setDeleteUsersDialog] = useState(false);
     const [selectedUsers, setSelectedUsers] = useState(null);
     const [submitted, setSubmitted] = useState(false);
-    const [globalFilter, setGlobalFilter] = useState(null);
+    const [globalFilter, setGlobalFilter] = useState('d');
     const toast = useRef(null);
     const dt = useRef(null);
     const [loading1, setLoading1] = useState(true);
@@ -49,6 +49,7 @@ const User = () => {
             })
         }
         ListUsers();
+        setGlobalFilter('');
 
 
 
@@ -79,11 +80,11 @@ const User = () => {
 
     const checkUserInfo = () => {
         if (user.firstName === '' || user.email === '' || user.department.length === 0 || user.type.length === 0) {
-            console.log("FALSE!!!");
+            // console.log("FALSE!!!");
             return false;
         }
         else {
-            console.log("TRUUUUE!!!");
+            // console.log("TRUUUUE!!!");
             return true;
         }
     }
@@ -93,7 +94,7 @@ const User = () => {
             let data = user;
             data.department = data.department.name;
             data.type = data.type.code;
-            console.log({ ...data });
+            // console.log({ ...data });
             await ProjectsStore.createUser({ ...data }).then(() => {
                 toast.current.show({ severity: 'success', summary: 'Successful', detail: `'User Created'`, life: 3000 });
                 setUser(emptyuser);
@@ -123,7 +124,7 @@ const User = () => {
     const confirmDeleteUser =  (User) => {
         setUser(User)
         setDeleteUserDialog(true);
-        console.log(User, user)
+        // console.log(User, user)
     };
 
     const deleteUser = async () => {
@@ -238,7 +239,7 @@ const User = () => {
             <h5 className="m-0">Manage Users</h5>
             <span className="block mt-2 md:mt-0 p-input-icon-left">
                 <i className="pi pi-search" />
-                <InputText type="search" onChange={(e) => setGlobalFilter(e.target.value)} placeholder="Search..." />
+                <InputText type="search" value={globalFilter} onChange={(e) => setGlobalFilter(e.target.value)} placeholder="Search..." />
             </span>
         </div>
     );
@@ -272,7 +273,7 @@ const User = () => {
     // to set data to any feild 
     const onInputChange = (e, name) => {
         let val = (e.target && e.target.value) || '';
-        console.log(val)
+        // console.log(val)
         let _user = { ...user };
 
         _user[`${name}`] = val;
@@ -331,7 +332,7 @@ const User = () => {
                 {/* roles */}
                 <h4 className='col-12'>Roles</h4>
                 <div className="field col-12 ">
-                    <label>User's roles</label>
+                    <label>${"User\'s roles"}</label>
                     <Dropdown value={user.type} maxSelectedLabels={1} options={Roles} optionLabel="name" display="chip" onChange={(e) => onInputChange(e, 'type')}
                         placeholder="Select Role" className={classNames({ 'p-invalid': submitted && user.type.length == 0 })} />
                     {/* {!submitted && <small className=' text-color-secondary'>User can have one or more roles</small>} */}
@@ -386,7 +387,7 @@ const User = () => {
                 {/* roles */}
                 <h4 className='col-12'>Roles</h4>
                 <div className="field col-6 ">
-                    <label>User's roles</label>
+                    <label>${"User\'s roles"}</label>
                     <Dropdown value={user.type} options={Roles} optionLabel="name" display="chip" onChange={(e) => onInputChange(e, 'type')}
                         placeholder="Select Roles" className={classNames({ 'p-invalid': submitted && user.type.length == 0 })} />
                     {!submitted && <small className=' text-color-secondary'>User can have one or more roles</small>}

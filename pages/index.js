@@ -24,7 +24,7 @@ const LoginPage = () => {
     }, []);
 
     const handleClick = async () => {
-        console.log({email, password});
+        // console.log({email, password});
 
         await newAuthStore.checkLogin({email, password});
         router.push('/projects');

@@ -22,7 +22,7 @@ const LoginPage = () => {
     const containerClassName = classNames('surface-ground flex align-items-center justify-content-center min-h-screen min-w-screen overflow-hidden', { 'p-input-filled': layoutConfig.inputStyle === 'filled' });
 
     const handleClick = async () => {
-        // console.log({ email, password });
+        // // console.log({ email, password });
         const res = await newAuthStore.login({ email, password });
 
         if (res !== "") {

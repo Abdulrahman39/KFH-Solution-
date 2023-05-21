@@ -27,7 +27,7 @@ const Dashboard = (context) => {
     // }
     // function RandomColor() {
     //     const backgroundCss = `linear-gradient(0deg, rgba(${Math.floor(rand() * 256)}, ${Math.floor(rand() * 256)}, ${Math.floor(rand() * 256)}, 0.2), rgba(${Math.floor(rand() * 256)}, ${Math.floor(rand() * 256)}, ${Math.floor(rand() * 256)}, 10.1)), radial-gradient(77.36% 256.97% at 77.36% 57.52%, rgb(${Math.floor(rand() * 256)}, ${Math.floor(rand() * 256)}, ${Math.floor(rand() * 256)}) 0%, rgb(${Math.floor(rand() * 256)}, ${Math.floor(rand() * 256)}, ${Math.floor(rand() * 256)}) 100%)`;
-    //     console.log(backgroundCss)
+    //     // console.log(backgroundCss)
     //     return backgroundCss;
     // }
 
@@ -36,13 +36,13 @@ const Dashboard = (context) => {
 
     useEffect(() => {
         const refresh = async () => {
-            console.log(localStorage.getItem("fromLogin"));
+            // console.log(localStorage.getItem("fromLogin"));
 
             if (localStorage.getItem("fromLogin") === 'true') {
                 await authStore.refresh();
             }
 
-            // console.log(authStore.redirected);
+            // // console.log(authStore.redirected);
         };
 
         refresh();

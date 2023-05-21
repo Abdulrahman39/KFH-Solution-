@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 import { InputTextarea } from 'primereact/inputtextarea';
@@ -25,6 +25,15 @@ const FormLayoutDemo = () => {
         { name: 'Android', code: 'pi-android text-primary', icon: 'pi pi-android' },
         { name: 'IOS', code: 'pi-apple text-base', icon: 'pi pi-apple' },
     ];
+
+    useEffect(() => {
+        if (localStorage.getItem('prevPage') === 'Releases')
+            localStorage.setItem('prevPage', 'New Releases');
+        else {
+            projectsStore.projectsLoaded = false;
+            router.push('/projects');
+        }
+    }, []);
 
     // const formData = new FormData();
 
@@ -61,10 +70,10 @@ const FormLayoutDemo = () => {
 
         let i = 1;
         Object.keys(files).forEach((key) => {
-            console.log(files[key]);
+            // console.log(files[key]);
             projectsStore.formData.append(`file${i}`, files[key]);
-            console.log(`file${i}`);
-            console.log(projectsStore.formData.get(`file${i}`));
+            // console.log(`file${i}`);
+            // console.log(projectsStore.formData.get(`file${i}`));
             _totalSize += files[key].size || 0;
             i++;
         });
@@ -79,7 +88,7 @@ const FormLayoutDemo = () => {
             _totalSize += file.size || 0;
         });
 
-        console.log("test123");
+        // console.log("test123");
         setTotalSize(_totalSize);
         toast.current.show({ severity: 'info', summary: 'Success', detail: 'File Uploaded' });
     };
@@ -150,7 +159,7 @@ const FormLayoutDemo = () => {
             "platform": platform.name.toUpperCase()
         };
 
-        console.log(releaseObj);
+        // console.log(releaseObj);
         projectsStore.formData.append("release", JSON.stringify(releaseObj));
         await projectsStore.createRelease();
 
@@ -164,7 +173,8 @@ const FormLayoutDemo = () => {
         projectsStore.formData.delete('file2');
 
         await projectsStore.getProject();
-        router.push('/releases');
+        projectsStore.projectsLoaded = false;
+        router.push('/projects');
     };
 
     return (

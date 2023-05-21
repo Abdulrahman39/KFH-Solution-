@@ -37,7 +37,6 @@ const AppMenu = () => {
     return (
         <MenuProvider>
             <ul className="layout-menu">
-                {authStore.userLoaded && console.log(authStore.user.type)}
                 {authStore.userLoaded && authStore.user.type !== 'ROLE_ADMIN' && model.map((item, i) => {
                     return !item.seperator ? <AppMenuitem item={item} root={true} index={i} key={item.label} /> : <li className="menu-separator"></li>;
                 })}

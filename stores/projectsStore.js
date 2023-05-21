@@ -19,11 +19,11 @@ class ProjectsStore {
 
         try {
             const res = await instance.get("project/");
-            // console.log(res);
+            // // console.log(res);
             this.projects = res;
             await this.addReleases();
             this.projectsLoaded = true;
-            // console.log(this.projects);
+            // // console.log(this.projects);
         } catch (error) {
             console.error(error);
         }
@@ -32,9 +32,9 @@ class ProjectsStore {
     getUsers = async () => {
         try {
             const res = await instance.get("user/");
-            // console.log(res);
+            // // console.log(res);
             this.users = toJS(res);
-            console.log(this.users);
+            // console.log(this.users);
             return res;
         } catch (error) {
             console.error(error);
@@ -44,7 +44,7 @@ class ProjectsStore {
     deleteUser = async (userId) => {
         try {
             const res = await instance.delete(`user/${userId}`);
-            // console.log(res);
+            // // console.log(res);
             // this.users = res
             return res;
         } catch (error) {
@@ -55,7 +55,7 @@ class ProjectsStore {
     editUser = async (userId, data) => {
         try {
             const res = await instance.put(`user/${userId}`, data);
-            console.log(res);
+            // console.log(res);
             // this.users = res
             return res;
         } catch (error) {
@@ -67,7 +67,7 @@ class ProjectsStore {
     createUser = async (data) => {
         try {
             const res = await instance.post("user/", data);
-            console.log(res);
+            // console.log(res);
         } catch (error) {
             console.error(error);
         }
@@ -76,7 +76,7 @@ class ProjectsStore {
     addProject = async (project) => {
         try {
             const res = await instance.post("project/", project);
-            console.log(res);
+            // console.log(res);
             await this.getProject();
         } catch (error) {
             console.error(error);
@@ -86,7 +86,7 @@ class ProjectsStore {
     editProject = async (projectID, project) => {
         try {
             const res = await instance.put(`project/${projectID}`, project);
-            console.log(res);
+            // console.log(res);
             await this.getProject();
         } catch (error) {
             console.error(error);
@@ -96,7 +96,7 @@ class ProjectsStore {
     deleteProject = async (projectID) => {
         try {
             const res = await instance.delete(`project/${projectID}`);
-            console.log(res);
+            // console.log(res);
             await this.getProject();
         } catch (error) {
             console.error(error);
@@ -105,9 +105,9 @@ class ProjectsStore {
 
     addReleases = async () => {
         for (let i = 0; i < this.projects.length; i++) {
-            // console.log(this.projects[i]);
+            // // console.log(this.projects[i]);
             this.projects[i]["Releases"] = await this.getRelease(this.projects[i].id);
-            // console.log(this.projects[i]["Releases"]);
+            // // console.log(this.projects[i]["Releases"]);
 
             let iOS_Releases = [], android_Releases = [];
             for (let j = 0; j < this.projects[i].Releases.length; j++) {
@@ -120,17 +120,17 @@ class ProjectsStore {
             this.projects[i]["iOS"] = iOS_Releases;
             this.projects[i]["Android"] = android_Releases;
 
-            console.log(this.projects[i]);
-            console.log(this.projects[i].iOS);
-            console.log(this.projects[i].Android);
+            // console.log(this.projects[i]);
+            // console.log(this.projects[i].iOS);
+            // console.log(this.projects[i].Android);
         }
     };
 
     getRelease = async (projectID) => {
         try {
-            console.log(projectID);
+            // console.log(projectID);
             const res = await instance.get(`release/${projectID}`);
-            console.log(res);
+            // console.log(res);
             return res;
         } catch (error) {
             console.error(error);
@@ -139,12 +139,12 @@ class ProjectsStore {
 
     createRelease = async () => {
         try {
-            console.log(this.formData.get("release"));
-            console.log(this.formData.get("file1"));
+            // console.log(this.formData.get("release"));
+            // console.log(this.formData.get("file1"));
             const res = await instance.post("release/", this.formData, {
                 'Content-Type': 'multipart/form-data'
             });
-            console.log(res);
+            // console.log(res);
             return res;
         } catch (error) {
             console.error(error);

@@ -7,6 +7,15 @@ import 'primeicons/primeicons.css';
 import '../styles/layout/layout.scss';
 import '../styles/demo/Demos.scss';
 
+export const noOverlayWorkaroundScript = `
+  window.addEventListener('error', event => {
+    event.stopImmediatePropagation()
+  })
+
+  window.addEventListener('unhandledrejection', event => {
+    event.stopImmediatePropagation()
+  })
+`;
 export default function MyApp({ Component, pageProps }) {
     if (Component.getLayout) {
         return <LayoutProvider suppressHydrationWarning>{Component.getLayout(<Component {...pageProps} />)}</LayoutProvider>;
