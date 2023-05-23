@@ -119,6 +119,7 @@ const User = () => {
             toast.current.show({ severity: 'success', summary: 'Successful', detail: `'User Created'`, life: 3000 });
             setUser(emptyuser);
             hideDialog()
+            window.location.reload();
         });
     };
 

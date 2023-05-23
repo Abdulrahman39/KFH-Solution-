@@ -103,6 +103,7 @@ const AdminProjects = () => {
         await projectsStore.deleteProject(project.id)
 
         toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Project Deleted', life: 3000 });
+        router.push('/projects');
     };
 
 
@@ -113,6 +114,7 @@ const AdminProjects = () => {
         setDeleteProjectsDialog(false);
         setSelectedProjects(null);
         toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Projects Deleted', life: 3000 });
+        router.push('/projects');
     };
 
 
